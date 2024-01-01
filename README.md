@@ -3,6 +3,11 @@
 <a href="/LICENSE"><img src="https://img.shields.io/badge/license-GPL-blue.svg" alt="license" /></a>  
 </p>
 
+## 本Fork版本改编自原版
+增加DNS/原生解锁检测机制 
+
+*以下内容为原作说明档
+
 ## For English user please see
 ### [Introduction](https://github.com/lmc999/RegionRestrictionCheck/blob/main/README_EN.md)
 
