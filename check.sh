@@ -403,11 +403,26 @@ function MediaUnlockTest_BBCiPLAYER() {
 }
 
 function MediaUnlockTest_Netflix() {
+    local resultdns=$(nslookup netflix.com)
+    local resultinlines=(${resultdns//$'\n'/ })
+    for i in ${resultinlines[*]}
+    do
+        if [[ $i == "netflix.com" ]]; then
+            local resultdnsindex=$(( $resultindex + 2 ))
+        fi
+        local resultindex=$(( $resultindex + 1 ))
+    done
+    if [[ ${resultinlines[1]} == ${resultinlines[$resultdnsindex]} ]]; then
+        local resultunlocktype="${Font_Yellow}DNS 解锁${Font_Suffix}"
+    else
+        local resultunlocktype="${Font_Green}原生解锁${Font_Suffix}"
+    fi    
+    
     local result1=$(curl $useNIC $usePROXY $xForward -${1} --user-agent "${UA_Browser}" -fsL --write-out %{http_code} --output /dev/null --max-time 10 "https://www.netflix.com/title/81280792" 2>&1)
     local result2=$(curl $useNIC $usePROXY $xForward -${1} --user-agent "${UA_Browser}" -fsL --write-out %{http_code} --output /dev/null --max-time 10 "https://www.netflix.com/title/70143836" 2>&1)
     
     if [[ "$result1" == "404" ]] && [[ "$result2" == "404" ]]; then
-        echo -n -e "\r Netflix:\t\t\t\t${Font_Yellow}Originals Only${Font_Suffix}\n"
+        echo -n -e "\r Netflix:\t\t${resultunlocktype}\t${Font_Yellow}Originals Only${Font_Suffix}\n"
         return
     elif [[ "$result1" == "403" ]] && [[ "$result2" == "403" ]]; then
         echo -n -e "\r Netflix:\t\t\t\t${Font_Red}No${Font_Suffix}\n"
@@ -417,7 +432,7 @@ function MediaUnlockTest_Netflix() {
         if [[ ! -n "$region" ]]; then
             region="US"
         fi
-        echo -n -e "\r Netflix:\t\t\t\t${Font_Green}Yes (Region: ${region})${Font_Suffix}\n"
+        echo -n -e "\r Netflix:\t\t${resultunlocktype}\t${Font_Green}Yes (Region: ${region})${Font_Suffix}\n"
         return
     elif [[ "$result1" == "000" ]]; then
         echo -n -e "\r Netflix:\t\t\t\t${Font_Red}Failed (Network Connection)${Font_Suffix}\n"
@@ -426,6 +441,21 @@ function MediaUnlockTest_Netflix() {
 }
 
 function MediaUnlockTest_DisneyPlus() {
+	  local resultdns=$(nslookup disneyplus.com)
+    local resultinlines=(${resultdns//$'\n'/ })
+    for i in ${resultinlines[*]}
+    do
+        if [[ $i == "disneyplus.com" ]]; then
+            local resultdnsindex=$(( $resultindex + 2 ))
+        fi
+        local resultindex=$(( $resultindex + 1 ))
+    done
+    if [[ ${resultinlines[1]} == ${resultinlines[$resultdnsindex]} ]]; then
+        local resultunlocktype="${Font_Yellow}DNS 解锁${Font_Suffix}"
+    else
+        local resultunlocktype="${Font_Green}原生解锁${Font_Suffix}"
+    fi
+    
     local PreAssertion=$(curl $useNIC $usePROXY $xForward -${1} --user-agent "${UA_Browser}" -s --max-time 10 -X POST "https://disney.api.edge.bamgrid.com/devices" -H "authorization: Bearer ZGlzbmV5JmJyb3dzZXImMS4wLjA.Cu56AgSfBTDag5NiRA81oLHkDZfu5L3CKadnefEAY84" -H "content-type: application/json; charset=UTF-8" -d '{"deviceFamily":"browser","applicationRuntime":"chrome","deviceProfile":"windows","attributes":{}}' 2>&1)
     if [[ "$PreAssertion" == "curl"* ]] && [[ "$1" == "6" ]]; then
         echo -n -e "\r Disney+:\t\t\t\t${Font_Red}IPv6 Not Support${Font_Suffix}\n"
@@ -457,16 +487,16 @@ function MediaUnlockTest_DisneyPlus() {
     local inSupportedLocation=$(echo $tmpresult | python -m json.tool 2>/dev/null | grep 'inSupportedLocation' | awk '{print $2}' | cut -f1 -d',')
 
     if [[ "$region" == "JP" ]]; then
-        echo -n -e "\r Disney+:\t\t\t\t${Font_Green}Yes (Region: JP)${Font_Suffix}\n"
+        echo -n -e "\r Disney+:\t\t${resultunlocktype}\t${Font_Green}Yes (Region: JP)${Font_Suffix}\n"
         return
     elif [ -n "$region" ] && [[ "$inSupportedLocation" == "false" ]] && [ -z "$isUnabailable" ]; then
-        echo -n -e "\r Disney+:\t\t\t\t${Font_Yellow}Available For [Disney+ $region] Soon${Font_Suffix}\n"
+        echo -n -e "\r Disney+:\t\t${resultunlocktype}\t${Font_Yellow}Available For [Disney+ $region] Soon${Font_Suffix}\n"
         return
     elif [ -n "$region" ] && [ -n "$isUnavailable" ]; then
         echo -n -e "\r Disney+:\t\t\t\t${Font_Red}No${Font_Suffix}\n"
         return
     elif [ -n "$region" ] && [[ "$inSupportedLocation" == "true" ]]; then
-        echo -n -e "\r Disney+:\t\t\t\t${Font_Green}Yes (Region: $region)${Font_Suffix}\n"
+        echo -n -e "\r Disney+:\t\t${resultunlocktype}\t${Font_Green}Yes (Region: $region)${Font_Suffix}\n"
         return
     elif [ -z "$region" ]; then
         echo -n -e "\r Disney+:\t\t\t\t${Font_Red}No${Font_Suffix}\n"
@@ -479,6 +509,21 @@ function MediaUnlockTest_DisneyPlus() {
 }
 
 function MediaUnlockTest_Dazn() {
+    local resultdns=$(nslookup startup.core.indazn.com)
+    local resultinlines=(${resultdns//$'\n'/ })
+    for i in ${resultinlines[*]}
+    do
+        if [[ $i == "startup.core.indazn.com" ]]; then
+            local resultdnsindex=$(( $resultindex + 2 ))
+        fi
+        local resultindex=$(( $resultindex + 1 ))
+    done
+    if [[ ${resultinlines[1]} == ${resultinlines[$resultdnsindex]} ]]; then
+        local resultunlocktype="${Font_Yellow}DNS 解锁${Font_Suffix}"
+    else
+        local resultunlocktype="${Font_Green}原生解锁${Font_Suffix}"
+    fi
+    
     local tmpresult=$(curl $useNIC $usePROXY $xForward -${1} -sS --max-time 10 -X POST -H "Content-Type: application/json" -d '{"LandingPageKey":"generic","Languages":"zh-CN,zh,en","Platform":"web","PlatformAttributes":{},"Manufacturer":"","PromoCode":"","Version":"2"}' "https://startup.core.indazn.com/misl/v5/Startup" 2>&1)
 
     if [[ "$tmpresult" == "curl"* ]]; then
@@ -490,7 +535,7 @@ function MediaUnlockTest_Dazn() {
 
     if [[ "$isAllowed" == "true" ]]; then
         local CountryCode=$(echo $result | tr [:lower:] [:upper:])
-        echo -n -e "\r Dazn:\t\t\t\t\t${Font_Green}Yes (Region: ${CountryCode})${Font_Suffix}\n"
+        echo -n -e "\r Dazn:\t\t\t${resultunlocktype}\t${Font_Green}Yes (Region: ${CountryCode})${Font_Suffix}\n"
         return
     elif [[ "$isAllowed" == "false" ]]; then
         echo -n -e "\r Dazn:\t\t\t\t\t${Font_Red}No${Font_Suffix}\n"
@@ -795,6 +840,21 @@ function MediaUnlockTest_ITVHUB() {
 }
 
 function MediaUnlockTest_iQYI_Region() {
+    local resultdns=$(nslookup www.iq.com)
+    local resultinlines=(${resultdns//$'\n'/ })
+    for i in ${resultinlines[*]}
+    do
+        if [[ $i == "www.iq.com" ]]; then
+            local resultdnsindex=$(( $resultindex + 2 ))
+        fi
+        local resultindex=$(( $resultindex + 1 ))
+    done
+    if [[ ${resultinlines[1]} == ${resultinlines[$resultdnsindex]} ]]; then
+        local resultunlocktype="${Font_Yellow}DNS 解锁${Font_Suffix}"
+    else
+        local resultunlocktype="${Font_Green}原生解锁${Font_Suffix}"
+    fi
+    
     curl $useNIC $usePROXY $xForward -${1} ${ssll} -s -I --max-time 10 "https://www.iq.com/" >~/iqiyi
 
     if [ $? -eq 1 ]; then
@@ -808,11 +868,11 @@ function MediaUnlockTest_iQYI_Region() {
     if [ -n "$result" ]; then
         if [[ "$result" == "ntw" ]]; then
             result=TW
-            echo -n -e "\r iQyi Oversea Region:\t\t\t${Font_Green}${result}${Font_Suffix}\n"
+            echo -n -e "\r iQyi Oversea Region:\t${resultunlocktype}\t${Font_Green}${result}${Font_Suffix}\n"
             return
         else
             result=$(echo $result | tr [:lower:] [:upper:])
-            echo -n -e "\r iQyi Oversea Region:\t\t\t${Font_Green}${result}${Font_Suffix}\n"
+            echo -n -e "\r iQyi Oversea Region:\t${resultunlocktype}\t${Font_Green}${result}${Font_Suffix}\n"
             return
         fi
     else
@@ -935,6 +995,20 @@ function MediaUnlockTest_LineTV.TW() {
 }
 
 function MediaUnlockTest_Viu.com() {
+    local resultdns=$(nslookup www.viu.com)
+    local resultinlines=(${resultdns//$'\n'/ })
+    for i in ${resultinlines[*]}
+    do
+        if [[ $i == "www.viu.com" ]]; then
+            local resultdnsindex=$(( $resultindex + 2 ))
+        fi
+        local resultindex=$(( $resultindex + 1 ))
+    done
+    if [[ ${resultinlines[1]} == ${resultinlines[$resultdnsindex]} ]]; then
+        local resultunlocktype="${Font_Yellow}DNS 解锁${Font_Suffix}"
+    else
+        local resultunlocktype="${Font_Green}原生解锁${Font_Suffix}"
+    fi
     local tmpresult=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} -s -o /dev/null -L --max-time 10 -w '%{url_effective}\n' "https://www.viu.com/" 2>&1)
     if [ "$tmpresult" = "000" ]; then
         echo -n -e "\r Viu.com:\t\t\t\t${Font_Red}Failed (Network Connection)${Font_Suffix}\n"
@@ -948,7 +1022,7 @@ function MediaUnlockTest_Viu.com() {
             return
         else
             result=$(echo $result | tr [:lower:] [:upper:])
-            echo -n -e "\r Viu.com:\t\t\t\t${Font_Green}Yes (Region: ${result})${Font_Suffix}\n"
+            echo -n -e "\r Viu.com:\t\t${resultunlocktype}\t${Font_Green}Yes (Region: ${result})${Font_Suffix}\n"
             return
         fi
 
@@ -1128,6 +1202,21 @@ function MediaUnlockTest_BritBox() {
 }
 
 function MediaUnlockTest_PrimeVideo_Region() {
+    local resultdns=$(nslookup www.primevideo.com)
+    local resultinlines=(${resultdns//$'\n'/ })
+    for i in ${resultinlines[*]}
+    do
+        if [[ $i == "www.primevideo.com" ]]; then
+            local resultdnsindex=$(( $resultindex + 2 ))
+        fi
+        local resultindex=$(( $resultindex + 1 ))
+    done
+    if [[ ${resultinlines[1]} == ${resultinlines[$resultdnsindex]} ]]; then
+        local resultunlocktype="${Font_Yellow}DNS 解锁${Font_Suffix}"
+    else
+        local resultunlocktype="${Font_Green}原生解锁${Font_Suffix}"
+    fi
+    
     local tmpresult=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} --user-agent "${UA_Browser}" -sL --max-time 10 "https://www.primevideo.com" 2>&1)
 
     if [[ "$tmpresult" = "curl"* ]]; then
@@ -1137,7 +1226,7 @@ function MediaUnlockTest_PrimeVideo_Region() {
 
     local result=$(echo $tmpresult | grep '"currentTerritory":' | sed 's/.*currentTerritory//' | cut -f3 -d'"' | head -n 1)
     if [ -n "$result" ]; then
-        echo -n -e "\r Amazon Prime Video:\t\t\t${Font_Green}Yes (Region: $result)${Font_Suffix}\n"
+        echo -n -e "\r Amazon Prime Video:\t${resultunlocktype}\t${Font_Green}Yes (Region: $result)${Font_Suffix}\n"
         return
     else
         echo -n -e "\r Amazon Prime Video:\t\t\t${Font_Red}Unsupported${Font_Suffix}\n"
@@ -1248,6 +1337,21 @@ function MediaUnlockTest_Catchplay() {
 }
 
 function MediaUnlockTest_HotStar() {
+    local resultdns=$(nslookup api.hotstar.com)
+    local resultinlines=(${resultdns//$'\n'/ })
+    for i in ${resultinlines[*]}
+    do
+        if [[ $i == "api.hotstar.com" ]]; then
+            local resultdnsindex=$(( $resultindex + 2 ))
+        fi
+        local resultindex=$(( $resultindex + 1 ))
+    done
+    if [[ ${resultinlines[1]} == ${resultinlines[$resultdnsindex]} ]]; then
+        local resultunlocktype="${Font_Yellow}DNS 解锁${Font_Suffix}"
+    else
+        local resultunlocktype="${Font_Green}原生解锁${Font_Suffix}"
+    fi
+    
     local result=$(curl $useNIC $usePROXY $xForward --user-agent "${UA_Browser}" -${1} ${ssll} -fsL --write-out %{http_code} --output /dev/null --max-time 10 "https://api.hotstar.com/o/v1/page/1557?offset=0&size=20&tao=0&tas=20" 2>&1)
     if [ "$result" = "000" ]; then
         echo -n -e "\r HotStar:\t\t\t\t${Font_Red}Failed (Network Connection)${Font_Suffix}\n"
@@ -1256,7 +1360,7 @@ function MediaUnlockTest_HotStar() {
         local region=$(curl $useNIC $usePROXY $xForward --user-agent "${UA_Browser}" -${1} ${ssll} -sI "https://www.hotstar.com" | grep 'geo=' | sed 's/.*geo=//' | cut -f1 -d",")
         local site_region=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} -s -o /dev/null -L --max-time 10 -w '%{url_effective}\n' "https://www.hotstar.com" | sed 's@.*com/@@' | tr [:lower:] [:upper:])
         if [ -n "$region" ] && [ "$region" = "$site_region" ]; then
-            echo -n -e "\r HotStar:\t\t\t\t${Font_Green}Yes (Region: $region)${Font_Suffix}\n"
+            echo -n -e "\r HotStar:\t\t${resultunlocktype}\t${Font_Green}Yes (Region: $region)${Font_Suffix}\n"
             return
         else
             echo -n -e "\r HotStar:\t\t\t\t${Font_Red}No${Font_Suffix}\n"
@@ -1746,6 +1850,21 @@ function MediaUnlockTest_RaiPlay() {
 }
 
 function MediaUnlockTest_TVBAnywhere() {
+    local resultdns=$(nslookup uapisfm.tvbanywhere.com.sg)
+    local resultinlines=(${resultdns//$'\n'/ })
+    for i in ${resultinlines[*]}
+    do
+        if [[ $i == "uapisfm.tvbanywhere.com.sg" ]]; then
+            local resultdnsindex=$(( $resultindex + 2 ))
+        fi
+        local resultindex=$(( $resultindex + 1 ))
+    done
+    if [[ ${resultinlines[1]} == ${resultinlines[$resultdnsindex]} ]]; then
+        local resultunlocktype="${Font_Yellow}DNS 解锁${Font_Suffix}"
+    else
+        local resultunlocktype="${Font_Green}原生解锁${Font_Suffix}"
+    fi
+    
     local tmpresult=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} -s --max-time 10 "https://uapisfm.tvbanywhere.com.sg/geoip/check/platform/android" 2>&1)
     if [ -z "$tmpresult" ]; then
         echo -n -e "\r TVBAnywhere+:\t\t\t\t${Font_Red}Failed (Network Connection)${Font_Suffix}\n"
@@ -1754,7 +1873,7 @@ function MediaUnlockTest_TVBAnywhere() {
 
     local result=$(echo $tmpresult | python -m json.tool 2>/dev/null | grep 'allow_in_this_country' | awk '{print $2}' | cut -f1 -d",")
     if [[ "$result" == "true" ]]; then
-        echo -n -e "\r TVBAnywhere+:\t\t\t\t${Font_Green}Yes${Font_Suffix}\n"
+        echo -n -e "\r TVBAnywhere+:\t\t${resultunlocktype}\t${Font_Green}Yes${Font_Suffix}\n"
         return
     elif [[ "$result" == "false" ]]; then
         echo -n -e "\r TVBAnywhere+:\t\t\t\t${Font_Red}No${Font_Suffix}\n"
@@ -2581,6 +2700,21 @@ function MediaUnlockTest_Funimation() {
 }
 
 function MediaUnlockTest_Spotify() {
+    local resultdns=$(nslookup spclient.wg.spotify.com)
+    local resultinlines=(${resultdns//$'\n'/ })
+    for i in ${resultinlines[*]}
+    do
+        if [[ $i == "spclient.wg.spotify.com" ]]; then
+            local resultdnsindex=$(( $resultindex + 2 ))
+        fi
+        local resultindex=$(( $resultindex + 1 ))
+    done
+    if [[ ${resultinlines[1]} == ${resultinlines[$resultdnsindex]} ]]; then
+        local resultunlocktype="${Font_Yellow}DNS 解锁${Font_Suffix}"
+    else
+        local resultunlocktype="${Font_Green}原生解锁${Font_Suffix}"
+    fi
+    
     local tmpresult=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} --user-agent "${UA_Browser}" -s --max-time 10 -X POST "https://spclient.wg.spotify.com/signup/public/v1/account" -d "birth_day=11&birth_month=11&birth_year=2000&collect_personal_info=undefined&creation_flow=&creation_point=https%3A%2F%2Fwww.spotify.com%2Fhk-en%2F&displayname=Gay%20Lord&gender=male&iagree=1&key=a1e486e2729f46d6bb368d6b2bcda326&platform=www&referrer=&send-email=0&thirdpartyemail=0&identifier_token=AgE6YTvEzkReHNfJpO114514" -H "Accept-Language: en" 2>&1)
     local region=$(echo $tmpresult | python -m json.tool 2>/dev/null | grep '"country":' | cut -f4 -d'"')
     local isLaunched=$(echo $tmpresult | python -m json.tool 2>/dev/null | grep is_country_launched | cut -f1 -d',' | awk '{print $2}')
@@ -2593,7 +2727,7 @@ function MediaUnlockTest_Spotify() {
         echo -n -e "\r Spotify Registration:\t\t\t${Font_Red}No${Font_Suffix}\n"
         return
     elif [ "$StatusCode" = "311" ] && [ "$isLaunched" = "true" ]; then
-        echo -n -e "\r Spotify Registration:\t\t\t${Font_Green}Yes (Region: $region)${Font_Suffix}\n"
+        echo -n -e "\r Spotify Registration:\t${resultunlocktype}\t${Font_Green}Yes (Region: $region)${Font_Suffix}\n"
         return
     fi
 }
@@ -3159,21 +3293,36 @@ function MediaUnlockTest_AISPlay() {
 }
 
 function OpenAITest(){
+    local resultdns=$(nslookup chat.openai.com)
+    local resultinlines=(${resultdns//$'\n'/ })
+    for i in ${resultinlines[*]}
+    do
+        if [[ $i == "chat.openai.com" ]]; then
+            local resultdnsindex=$(( $resultindex + 2 ))
+        fi
+        local resultindex=$(( $resultindex + 1 ))
+    done
+    if [[ ${resultinlines[1]} == ${resultinlines[$resultdnsindex]} ]]; then
+        local resultunlocktype="${Font_Yellow}DNS 解锁${Font_Suffix}"
+    else
+        local resultunlocktype="${Font_Green}原生解锁${Font_Suffix}"
+    fi
+    
     local tmpresult1=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} -sS --max-time 10 'https://api.openai.com/compliance/cookie_requirements'   -H 'authority: api.openai.com'   -H 'accept: */*'   -H 'accept-language: zh-CN,zh;q=0.9'   -H 'authorization: Bearer null'   -H 'content-type: application/json'   -H 'origin: https://platform.openai.com'   -H 'referer: https://platform.openai.com/'   -H 'sec-ch-ua: "Microsoft Edge";v="119", "Chromium";v="119", "Not?A_Brand";v="24"'   -H 'sec-ch-ua-mobile: ?0'   -H 'sec-ch-ua-platform: "Windows"'   -H 'sec-fetch-dest: empty'   -H 'sec-fetch-mode: cors'   -H 'sec-fetch-site: same-site'   -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0' 2>&1)
     local tmpresult2=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} -sS --max-time 10 'https://ios.chat.openai.com/' -H 'authority: ios.chat.openai.com'   -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'   -H 'accept-language: zh-CN,zh;q=0.9' -H 'sec-ch-ua: "Microsoft Edge";v="119", "Chromium";v="119", "Not?A_Brand";v="24"'   -H 'sec-ch-ua-mobile: ?0'   -H 'sec-ch-ua-platform: "Windows"'   -H 'sec-fetch-dest: document'   -H 'sec-fetch-mode: navigate'   -H 'sec-fetch-site: none'   -H 'sec-fetch-user: ?1'   -H 'upgrade-insecure-requests: 1'   -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0' 2>&1)
     local result1=$(echo $tmpresult1 | grep unsupported_country)
     local result2=$(echo $tmpresult2 | grep VPN)
     if [ -z "$result2" ] && [ -z "$result1" ] && [[ "$tmpresult1" != "curl"* ]] && [[ "$tmpresult2" != "curl"* ]]; then
-        echo -n -e "\r ChatGPT:\t\t\t\t${Font_Green}Yes${Font_Suffix}\n"
+        echo -n -e "\r ChatGPT:\t\t${resultunlocktype}\t${Font_Green}Yes${Font_Suffix}\n"
         return
     elif [ -n "$result2" ] && [ -n "$result1" ]; then
         echo -n -e "\r ChatGPT:\t\t\t\t${Font_Red}No${Font_Suffix}\n"
         return
     elif [ -z "$result1" ] && [ -n "$result2" ] && [[ "$tmpresult1" != "curl"* ]]; then
-        echo -n -e "\r ChatGPT:\t\t\t\t${Font_Yellow}Only Available with Web Browser${Font_Suffix}\n"
+        echo -n -e "\r ChatGPT:\t\t${resultunlocktype}\t${Font_Yellow}Only Available with Web Browser${Font_Suffix}\n"
         return
     elif [ -n "$result1" ] && [ -z "$result2" ]; then
-        echo -n -e "\r ChatGPT:\t\t\t\t${Font_Yellow}Only Available with Mobile APP${Font_Suffix}\n"
+        echo -n -e "\r ChatGPT:\t\t${resultunlocktype}\t${Font_Yellow}Only Available with Mobile APP${Font_Suffix}\n"
         return
     elif [[ "$tmpresult1" == "curl"* ]] && [ -n "$result2" ]; then
         echo -n -e "\r ChatGPT:\t\t\t\t${Font_Red}No${Font_Suffix}\n"
