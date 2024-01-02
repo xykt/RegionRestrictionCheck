@@ -154,4 +154,4 @@ iOS运行方法请参考[此处](https://github.com/lmc999/RegionRestrictionChec
 
 [onoc1yn](https://github.com/onoc1yn) 提供多架构docker解决方案及Hulu Cookies加密方案
 
-感谢[lmc999原作]https://github.com/lmc999/RegionRestrictionCheck，此脚本由此进化而来
+感谢[lmc999原作](https://github.com/lmc999/RegionRestrictionCheck)，本改版脚本由此进化而来
