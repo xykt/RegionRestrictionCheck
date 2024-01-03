@@ -372,7 +372,7 @@ function Get_Unlock_Type()
         if [ "$1" = "3" ];then
             local resultwarp=`ip addr | grep "warp:" | awk '{print $2}'`
             if [ "${resultwarp}" == "warp:" ];then
-                echo "${Font_Yellow}WARP解锁${Font_Suffix}"
+                echo "${Font_Yellow}代理解锁${Font_Suffix}"
             else
                 echo "${Font_Blue}内网解锁${Font_Suffix}"
             fi
