@@ -330,7 +330,7 @@ function Check_DNS_1()
     local resultinlines=(${resultdns//$'\n'/ })
     for i in ${resultinlines[*]}
     do
-        if [[ $i == "Name:" ]]; then
+        if [[ "$i" == "Name:" ]]; then
             local resultdnsindex=$(( $resultindex + 3 ))
             break
         fi
@@ -344,7 +344,7 @@ function Check_DNS_2()
     local resultdnstext=$(dig $1 | grep "ANSWER:")
     local resultdnstext=${resultdnstext#*"ANSWER: "}
     local resultdnstext=${resultdnstext%", AUTHORITY:"*}
-    if [ ${resultdnstext} == "0" ] || [ ${resultdnstext} == "1" ] || [ ${resultdnstext} == "2" ];then
+    if [ "${resultdnstext}" == "0" ] || [ "${resultdnstext}" == "1" ] || [ "${resultdnstext}" == "2" ];then
         echo 0
     else
         echo 1
@@ -357,7 +357,7 @@ function Check_DNS_3()
     echo "test$RANDOM$RANDOM.${1}"
     local resultdnstext=${resultdnstext#*"ANSWER: "}
     local resultdnstext=${resultdnstext%", AUTHORITY:"*}
-    if [ ${resultdnstext} == "0" ];then
+    if [ "${resultdnstext}" == "0" ];then
         echo 1
     else
         echo 0
@@ -369,13 +369,18 @@ function Get_Unlock_Type()
     
     while [ $# -ne 0 ]
     do
-        if [ $1 = "3" ];then
-            echo "${Font_Blue}内网解锁${Font_Suffix}"
+        if [ "$1" = "3" ];then
+            local resultwarp=`ip addr | grep "warp:" | awk '{print $2}'`
+            if [ "${resultwarp}" == "warp:" ];then
+                echo "${Font_Yellow}WARP解锁${Font_Suffix}"
+            else
+                echo "${Font_Blue}内网解锁${Font_Suffix}"
+            fi
             return
-        elif [ $1 = "2" ];then
+        elif [ "$1" = "2" ];then
             echo "${Font_Yellow}代理解锁${Font_Suffix}"
             return
-        elif [ $1 = "0" ];then
+        elif [ "$1" = "0" ];then
             echo "${Font_Yellow}DNS 解锁${Font_Suffix}"
             return
         fi
@@ -386,7 +391,7 @@ function Get_Unlock_Type()
 
 function Check_Proxy()
 {
-    if [ $1 == "4" ];then
+    if [ "$1" == "4" ];then
         local resultip=`ip -4 address show | grep inet | grep -v 127.0.0 | awk '{print $2}' | cut -d'/' -f1`
         local resultipinlines=(${resultip//$'\n'/ })
         for i in ${resultipinlines[*]}
@@ -402,12 +407,12 @@ function Check_Proxy()
         local resultproxyip="2"
         for i in ${resultipinlines[*]}
         do
-            if [[ $i == ${resultrealip} ]]; then
+            if [[ "$i" == "${resultrealip}" ]]; then
                 local resultproxyip="1"
                 break
             fi
         done
-    elif [ $1 == "6" ];then
+    elif [ "$1" == "6" ];then
         local resultip=`ip -6 address show | grep inet6 | grep -v "inet6 ::1" | awk '{print $2}' | cut -d'/' -f1`
         local resultipinlines=(${resultip//$'\n'/ })
         for i in ${resultipinlines[*]}
@@ -422,7 +427,7 @@ function Check_Proxy()
         local resultproxyip="2"
         for i in ${resultipinlines[*]}
         do
-            if [[ $i == ${resultrealip} ]]; then
+            if [[ "$i" == "${resultrealip}" ]]; then
                 local resultproxyip="1"
                 break
             fi
