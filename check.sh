@@ -285,6 +285,45 @@ function Check_DNS_IP()
     fi
 }
 
+function Check_Private_IP()
+{
+    if [ "$1" != "${1#*[0-9].[0-9]}" ]; then
+        if [ "$(calc_ip_net "$1" 255.0.0.0)" == "10.0.0.0" ];then
+            echo 0
+        elif [ "$(calc_ip_net "$1" 255.240.0.0)" == "172.16.0.0" ];then
+            echo 0
+        elif [ "$(calc_ip_net "$1" 255.255.0.0)" == "169.254.0.0" ];then
+            echo 0
+        elif [ "$(calc_ip_net "$1" 255.255.0.0)" == "192.168.0.0" ];then
+            echo 0
+        else
+            echo 1
+        fi
+    elif [ "$1" != "${1#*[0-9a-fA-F]:*}" ]; then
+        if [ "${1:0:3}" == "fe8" ];then
+            echo 0
+        elif [ "${1:0:3}" == "FE8" ];then
+            echo 0
+        elif [ "${1:0:2}" == "fc" ];then
+            echo 0
+        elif [ "${1:0:2}" == "FC" ];then
+            echo 0
+        elif [ "${1:0:2}" == "fd" ];then
+            echo 0
+        elif [ "${1:0:2}" == "FD" ];then
+            echo 0
+        elif [ "${1:0:2}" == "ff" ];then
+            echo 0
+        elif [ "${1:0:2}" == "FF" ];then
+            echo 0
+        else
+            echo 1
+        fi
+    else
+        echo 0
+    fi
+}
+
 function Check_DNS_1()
 {
     local resultdns=$(nslookup $1)
@@ -305,24 +344,93 @@ function Check_DNS_2()
     local resultdnstext=$(dig $1 | grep "ANSWER:")
     local resultdnstext=${resultdnstext#*"ANSWER: "}
     local resultdnstext=${resultdnstext%", AUTHORITY:"*}
-    if [ ${resultdnstext} = "0" ] || [ ${resultdnstext} = "1" ] || [ ${resultdnstext} = "2" ];then
+    if [ ${resultdnstext} == "0" ] || [ ${resultdnstext} == "1" ] || [ ${resultdnstext} == "2" ];then
         echo 0
     else
         echo 1
     fi
 }
+
+function Check_DNS_3()
+{
+    local resultdnstext=$(dig "test$RANDOM$RANDOM.${1}" | grep "ANSWER:")
+    echo "test$RANDOM$RANDOM.${1}"
+    local resultdnstext=${resultdnstext#*"ANSWER: "}
+    local resultdnstext=${resultdnstext%", AUTHORITY:"*}
+    if [ ${resultdnstext} == "0" ];then
+        echo 1
+    else
+        echo 0
+    fi
+}
+
 function Get_Unlock_Type()
 {
     
     while [ $# -ne 0 ]
     do
-        if [ $1 = "0" ];then
+        if [ $1 = "3" ];then
+            echo "${Font_Blue}内网解锁${Font_Suffix}"
+            return
+        elif [ $1 = "2" ];then
+            echo "${Font_Yellow}代理解锁${Font_Suffix}"
+            return
+        elif [ $1 = "0" ];then
             echo "${Font_Yellow}DNS 解锁${Font_Suffix}"
             return
         fi
         shift
     done
     echo "${Font_Green}原生解锁${Font_Suffix}"
+}
+
+function Check_Proxy()
+{
+    if [ $1 == "4" ];then
+        local resultip=`ip -4 address show | grep inet | grep -v 127.0.0 | awk '{print $2}' | cut -d'/' -f1`
+        local resultipinlines=(${resultip//$'\n'/ })
+        for i in ${resultipinlines[*]}
+        do
+            if [[ `Check_Private_IP $i` == "1" ]]; then
+                echo $i
+                break
+            fi
+            echo "3"
+            return
+        done
+        local resultrealip=`curl -s ip.sb -4`
+        local resultproxyip="2"
+        for i in ${resultipinlines[*]}
+        do
+            if [[ $i == ${resultrealip} ]]; then
+                local resultproxyip="1"
+                break
+            fi
+        done
+    elif [ $1 == "6" ];then
+        local resultip=`ip -6 address show | grep inet6 | grep -v "inet6 ::1" | awk '{print $2}' | cut -d'/' -f1`
+        local resultipinlines=(${resultip//$'\n'/ })
+        for i in ${resultipinlines[*]}
+        do
+            if [[ `Check_Private_IP $i` ]]; then
+                break
+            fi
+            echo "3"
+            return
+        done
+        local resultrealip=`curl -s ip.sb -6`
+        local resultproxyip="2"
+        for i in ${resultipinlines[*]}
+        do
+            if [[ $i == ${resultrealip} ]]; then
+                local resultproxyip="1"
+                break
+            fi
+        done
+    else
+        resultproxyip="2"
+    fi
+    echo ${resultproxyip}
 }
 
 function GameTest_Steam() {
@@ -531,7 +639,8 @@ function MediaUnlockTest_Netflix() {
     local checkunlockurl="netflix.com"
     local result1=`Check_DNS_1 ${checkunlockurl}`
     local result2=`Check_DNS_2 ${checkunlockurl}`
-    local resultunlocktype=`Get_Unlock_Type ${result1} ${result2}`
+    local result3=`Check_DNS_3 ${checkunlockurl}`
+    local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result2} ${result3}`
 
     
     local result1=$(curl $useNIC $usePROXY $xForward -${1} --user-agent "${UA_Browser}" -fsL --write-out %{http_code} --output /dev/null --max-time 10 "https://www.netflix.com/title/81280792" 2>&1)
@@ -560,7 +669,8 @@ function MediaUnlockTest_DisneyPlus() {
     local checkunlockurl="disneyplus.com"
     local result1=`Check_DNS_1 ${checkunlockurl}`
     local result2=`Check_DNS_2 ${checkunlockurl}`
-    local resultunlocktype=`Get_Unlock_Type ${result1} ${result2}`
+    local result3=`Check_DNS_3 ${checkunlockurl}`
+    local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result2} ${result3}`
     
     local PreAssertion=$(curl $useNIC $usePROXY $xForward -${1} --user-agent "${UA_Browser}" -s --max-time 10 -X POST "https://disney.api.edge.bamgrid.com/devices" -H "authorization: Bearer ZGlzbmV5JmJyb3dzZXImMS4wLjA.Cu56AgSfBTDag5NiRA81oLHkDZfu5L3CKadnefEAY84" -H "content-type: application/json; charset=UTF-8" -d '{"deviceFamily":"browser","applicationRuntime":"chrome","deviceProfile":"windows","attributes":{}}' 2>&1)
     if [[ "$PreAssertion" == "curl"* ]] && [[ "$1" == "6" ]]; then
@@ -618,7 +728,8 @@ function MediaUnlockTest_Dazn() {
     local checkunlockurl="startup.core.indazn.com"
     local result1=`Check_DNS_1 ${checkunlockurl}`
     local result2=`Check_DNS_2 ${checkunlockurl}`
-    local resultunlocktype=`Get_Unlock_Type ${result1} ${result2}`
+    local result3=`Check_DNS_3 ${checkunlockurl}`
+    local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result2} ${result3}`
     
     local tmpresult=$(curl $useNIC $usePROXY $xForward -${1} -sS --max-time 10 -X POST -H "Content-Type: application/json" -d '{"LandingPageKey":"generic","Languages":"zh-CN,zh,en","Platform":"web","PlatformAttributes":{},"Manufacturer":"","PromoCode":"","Version":"2"}' "https://startup.core.indazn.com/misl/v5/Startup" 2>&1)
 
@@ -938,7 +1049,8 @@ function MediaUnlockTest_ITVHUB() {
 function MediaUnlockTest_iQYI_Region() {
     local checkunlockurl="www.iq.com"
     local result1=`Check_DNS_1 ${checkunlockurl}`
-    local resultunlocktype=`Get_Unlock_Type ${result1}`
+    local result3=`Check_DNS_3 ${checkunlockurl}`
+    local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result3}`
     
     curl $useNIC $usePROXY $xForward -${1} ${ssll} -s -I --max-time 10 "https://www.iq.com/" >~/iqiyi
 
@@ -1082,7 +1194,8 @@ function MediaUnlockTest_LineTV.TW() {
 function MediaUnlockTest_Viu.com() {
     local checkunlockurl="www.viu.com"
     local result1=`Check_DNS_1 ${checkunlockurl}`
-    local resultunlocktype=`Get_Unlock_Type ${result1}`
+    local result3=`Check_DNS_3 ${checkunlockurl}`
+    local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result3}`
     
     local tmpresult=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} -s -o /dev/null -L --max-time 10 -w '%{url_effective}\n' "https://www.viu.com/" 2>&1)
     if [ "$tmpresult" = "000" ]; then
@@ -1190,6 +1303,12 @@ function MediaUnlockTest_FOD() {
 }
 
 function MediaUnlockTest_YouTube_Premium() {
+    local checkunlockurl="www.youtube.com"
+    local result1=`Check_DNS_1 ${checkunlockurl}`
+    local result2=`Check_DNS_2 ${checkunlockurl}`
+    local result3=`Check_DNS_3 ${checkunlockurl}`
+    local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result2} ${result3}`	
+
     local tmpresult=$(curl $useNIC $usePROXY $xForward -${1} --max-time 10 -sSL -H "Accept-Language: en" -b "YSC=BiCUU3-5Gdk; CONSENT=YES+cb.20220301-11-p0.en+FX+700; GPS=1; VISITOR_INFO1_LIVE=4VwPMkB7W5A; PREF=tz=Asia.Shanghai; _gcl_au=1.1.1809531354.1646633279" "https://www.youtube.com/premium" 2>&1)
 
     if [[ "$tmpresult" == "curl"* ]]; then
@@ -1199,7 +1318,7 @@ function MediaUnlockTest_YouTube_Premium() {
 
     local isCN=$(echo $tmpresult | grep 'www.google.cn')
     if [ -n "$isCN" ]; then
-        echo -n -e "\r YouTube Premium:\t\t\t${Font_Red}No${Font_Suffix} ${Font_Green} (Region: CN)${Font_Suffix} \n"
+        echo -n -e "\r YouTube Premium:\t${resultunlocktype}\t${Font_Red}No${Font_Suffix} ${Font_Green} (Region: CN)${Font_Suffix} \n"
         return
     fi
     local isNotAvailable=$(echo $tmpresult | grep 'Premium is not available in your country')
@@ -1210,10 +1329,10 @@ function MediaUnlockTest_YouTube_Premium() {
         echo -n -e "\r YouTube Premium:\t\t\t${Font_Red}No${Font_Suffix} \n"
         return
     elif [ -n "$isAvailable" ] && [ -n "$region" ]; then
-        echo -n -e "\r YouTube Premium:\t\t\t${Font_Green}Yes (Region: $region)${Font_Suffix}\n"
+        echo -n -e "\r YouTube Premium:\t${resultunlocktype}\t${Font_Green}Yes (Region: $region)${Font_Suffix}\n"
         return
     elif [ -z "$region" ] && [ -n "$isAvailable" ]; then
-        echo -n -e "\r YouTube Premium:\t\t\t${Font_Green}Yes${Font_Suffix}\n"
+        echo -n -e "\r YouTube Premium:\t${resultunlocktype}\t${Font_Green}Yes${Font_Suffix}\n"
         return
     else
         echo -n -e "\r YouTube Premium:\t\t\t${Font_Red}Failed${Font_Suffix}\n"
@@ -1279,7 +1398,8 @@ function MediaUnlockTest_BritBox() {
 function MediaUnlockTest_PrimeVideo_Region() {
     local checkunlockurl="www.primevideo.com"
     local result1=`Check_DNS_1 ${checkunlockurl}`
-    local resultunlocktype=`Get_Unlock_Type ${result1}`
+    local result3=`Check_DNS_3 ${checkunlockurl}`
+    local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result3}`
     
     local tmpresult=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} --user-agent "${UA_Browser}" -sL --max-time 10 "https://www.primevideo.com" 2>&1)
 
@@ -1404,7 +1524,8 @@ function MediaUnlockTest_HotStar() {
     local checkunlockurl="api.hotstar.com"
     local result1=`Check_DNS_1 ${checkunlockurl}`
     local result2=`Check_DNS_2 ${checkunlockurl}`
-    local resultunlocktype=`Get_Unlock_Type ${result1} ${result2}`
+    local result3=`Check_DNS_3 ${checkunlockurl}`
+    local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result2} ${result3}`
     
     local result=$(curl $useNIC $usePROXY $xForward --user-agent "${UA_Browser}" -${1} ${ssll} -fsL --write-out %{http_code} --output /dev/null --max-time 10 "https://api.hotstar.com/o/v1/page/1557?offset=0&size=20&tao=0&tas=20" 2>&1)
     if [ "$result" = "000" ]; then
@@ -1907,7 +2028,8 @@ function MediaUnlockTest_TVBAnywhere() {
     local checkunlockurl="uapisfm.tvbanywhere.com.sg"
     local result1=`Check_DNS_1 ${checkunlockurl}`
     local result2=`Check_DNS_2 ${checkunlockurl}`
-    local resultunlocktype=`Get_Unlock_Type ${result1} ${result2}`
+    local result3=`Check_DNS_3 ${checkunlockurl}`
+    local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result2} ${result3}`
     
     local tmpresult=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} -s --max-time 10 "https://uapisfm.tvbanywhere.com.sg/geoip/check/platform/android" 2>&1)
     if [ -z "$tmpresult" ]; then
@@ -2746,8 +2868,8 @@ function MediaUnlockTest_Funimation() {
 function MediaUnlockTest_Spotify() {
     local checkunlockurl="spclient.wg.spotify.com"
     local result1=`Check_DNS_1 ${checkunlockurl}`
-    local result2=`Check_DNS_2 ${checkunlockurl}`
-    local resultunlocktype=`Get_Unlock_Type ${result1}`
+    local result3=`Check_DNS_3 ${checkunlockurl}`
+    local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result3}`
     
     local tmpresult=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} --user-agent "${UA_Browser}" -s --max-time 10 -X POST "https://spclient.wg.spotify.com/signup/public/v1/account" -d "birth_day=11&birth_month=11&birth_year=2000&collect_personal_info=undefined&creation_flow=&creation_point=https%3A%2F%2Fwww.spotify.com%2Fhk-en%2F&displayname=Gay%20Lord&gender=male&iagree=1&key=a1e486e2729f46d6bb368d6b2bcda326&platform=www&referrer=&send-email=0&thirdpartyemail=0&identifier_token=AgE6YTvEzkReHNfJpO114514" -H "Accept-Language: en" 2>&1)
     local region=$(echo $tmpresult | python -m json.tool 2>/dev/null | grep '"country":' | cut -f4 -d'"')
@@ -3330,12 +3452,15 @@ function OpenAITest(){
     local checkunlockurl="chat.openai.com"
     local result1=`Check_DNS_1 ${checkunlockurl}`
     local result2=`Check_DNS_2 ${checkunlockurl}`
+    local result3=`Check_DNS_3 ${checkunlockurl}`
     local checkunlockurl="ios.chat.openai.com"
-    local result3=`Check_DNS_1 ${checkunlockurl}`
-    local result4=`Check_DNS_2 ${checkunlockurl}`
+    local result4=`Check_DNS_1 ${checkunlockurl}`
+    local result5=`Check_DNS_2 ${checkunlockurl}`
+    local result6=`Check_DNS_3 ${checkunlockurl}`
     local checkunlockurl="api.openai.com"
-    local result5=`Check_DNS_1 ${checkunlockurl}`
-    local resultunlocktype=`Get_Unlock_Type ${result1} ${result2} ${result3} ${result4} ${result5}`
+    local result7=`Check_DNS_1 ${checkunlockurl}`
+    local result8=`Check_DNS_3 ${checkunlockurl}`
+    local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result2} ${result3} ${result4} ${result5} ${result6} ${result7} ${result8}`
     
     local tmpresult1=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} -sS --max-time 10 'https://api.openai.com/compliance/cookie_requirements'   -H 'authority: api.openai.com'   -H 'accept: */*'   -H 'accept-language: zh-CN,zh;q=0.9'   -H 'authorization: Bearer null'   -H 'content-type: application/json'   -H 'origin: https://platform.openai.com'   -H 'referer: https://platform.openai.com/'   -H 'sec-ch-ua: "Microsoft Edge";v="119", "Chromium";v="119", "Not?A_Brand";v="24"'   -H 'sec-ch-ua-mobile: ?0'   -H 'sec-ch-ua-platform: "Windows"'   -H 'sec-fetch-dest: empty'   -H 'sec-fetch-mode: cors'   -H 'sec-fetch-site: same-site'   -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0' 2>&1)
     local tmpresult2=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} -sS --max-time 10 'https://ios.chat.openai.com/' -H 'authority: ios.chat.openai.com'   -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'   -H 'accept-language: zh-CN,zh;q=0.9' -H 'sec-ch-ua: "Microsoft Edge";v="119", "Chromium";v="119", "Not?A_Brand";v="24"'   -H 'sec-ch-ua-mobile: ?0'   -H 'sec-ch-ua-platform: "Windows"'   -H 'sec-fetch-dest: document'   -H 'sec-fetch-mode: navigate'   -H 'sec-fetch-site: none'   -H 'sec-fetch-user: ?1'   -H 'upgrade-insecure-requests: 1'   -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0' 2>&1)
@@ -3863,6 +3988,8 @@ function CheckPROXY() {
 }
 
 function CheckV4() {
+    resultP=`Check_Proxy 4`
+
     CheckPROXY
     if [[ "$language" == "e" ]]; then
         if [[ "$NetworkType" == "6" ]]; then
@@ -3922,6 +4049,8 @@ function CheckV4() {
 }
 
 function CheckV6() {
+    resultP=`Check_Proxy 6`
+
     if [[ "$language" == "e" ]]; then
         if [[ "$NetworkType" == "4" ]]; then
             isv6=0
