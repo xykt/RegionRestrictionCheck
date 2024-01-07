@@ -464,6 +464,11 @@ function MediaUnlockTest_HBONow() {
 
 # 流媒体解锁测试-动画疯
 function MediaUnlockTest_BahamutAnime() {
+    local checkunlockurl="gamer.com.tw"
+    local result1=`Check_DNS_1 ${checkunlockurl}`
+    local result3=`Check_DNS_3 ${checkunlockurl}`
+    local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result3}`
+
     local tmpdeviceid=$(curl $useNIC $usePROXY $xForward -${1} --user-agent "${UA_Browser}" --max-time 10 -fsSL "https://ani.gamer.com.tw/ajax/getdeviceid.php" --cookie-jar bahamut_cookie.txt 2>&1)
     if [[ "$tmpdeviceid" == "curl"* ]]; then
         echo -n -e "\r Bahamut Anime:\t\t\t\t${Font_Red}Failed (Network Connection)${Font_Suffix}\n"
@@ -478,7 +483,7 @@ function MediaUnlockTest_BahamutAnime() {
     rm bahamut_cookie.txt
     local result=$(echo $tmpresult | python -m json.tool 2>/dev/null | grep 'animeSn')
     if [ -n "$result" ]; then
-        echo -n -e "\r Bahamut Anime:\t\t\t\t${Font_Green}Yes${Font_Suffix}\n"
+        echo -n -e "\r Bahamut Anime:\t\t${resultunlocktype}\t${Font_Green}Yes${Font_Suffix}\n"
     else
         echo -n -e "\r Bahamut Anime:\t\t\t\t${Font_Red}No${Font_Suffix}\n"
     fi
@@ -773,10 +778,15 @@ function MediaUnlockTest_HuluJP() {
 }
 
 function MediaUnlockTest_MyTVSuper() {
+    local checkunlockurl="mytvsuper.com"
+    local result1=`Check_DNS_1 ${checkunlockurl}`
+    local result3=`Check_DNS_3 ${checkunlockurl}`
+    local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result3}`
+
     local result=$(curl $useNIC $usePROXY $xForward -s -${1} --max-time 10 "https://www.mytvsuper.com/api/auth/getSession/self/" 2>&1 | python -m json.tool 2>/dev/null | grep 'region' | awk '{print $2}')
 
     if [[ "$result" == "1" ]]; then
-        echo -n -e "\r MyTVSuper:\t\t\t\t${Font_Green}Yes${Font_Suffix}\n"
+        echo -n -e "\r MyTVSuper:\t\t${resultunlocktype}\t${Font_Green}Yes${Font_Suffix}\n"
         return
     else
         echo -n -e "\r MyTVSuper:\t\t\t\t${Font_Red}No${Font_Suffix}\n"
@@ -934,6 +944,11 @@ function MediaUnlockTest_HamiVideo() {
 }
 
 function MediaUnlockTest_4GTV() {
+    local checkunlockurl="4gtv.tv"
+    local result1=`Check_DNS_1 ${checkunlockurl}`
+    local result3=`Check_DNS_3 ${checkunlockurl}`
+    local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result3}`
+
     local tmpresult=$(curl $useNIC $usePROXY $xForward --user-agent "${UA_Browser}" -${1} ${ssll} -sS --max-time 10 -X POST -d 'value=D33jXJ0JVFkBqV%2BZSi1mhPltbejAbPYbDnyI9hmfqjKaQwRQdj7ZKZRAdb16%2FRUrE8vGXLFfNKBLKJv%2BfDSiD%2BZJlUa5Msps2P4IWuTrUP1%2BCnS255YfRadf%2BKLUhIPj' "https://api2.4gtv.tv//Vod/GetVodUrl3" 2>&1)
     if [[ "$tmpresult" == "curl"* ]]; then
         echo -n -e "\r 4GTV.TV:\t\t\t\t${Font_Red}Failed (Network Connection)${Font_Suffix}\n"
@@ -945,7 +960,7 @@ function MediaUnlockTest_4GTV() {
         echo -n -e "\r 4GTV.TV:\t\t\t\t${Font_Red}No${Font_Suffix}\n"
         return
     elif [[ "$checkfailed" == "true" ]]; then
-        echo -n -e "\r 4GTV.TV:\t\t\t\t${Font_Green}Yes${Font_Suffix}\n"
+        echo -n -e "\r 4GTV.TV:\t\t${resultunlocktype}\t${Font_Green}Yes${Font_Suffix}\n"
         return
     else
         echo -n -e "\r 4GTV.TV:\t\t\t\t${Font_Red}Failed${Font_Suffix}\n"
