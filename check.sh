@@ -643,6 +643,33 @@ function MediaUnlockTest_BBCiPLAYER() {
     fi
 }
 
+function MediaUnlockTest_TikTok() {
+    local checkunlockurl="tiktok.com"
+    local result1=`Check_DNS_1 ${checkunlockurl}`
+    local result3=`Check_DNS_3 ${checkunlockurl}`
+    local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result3}`
+
+    local Ftmpresult=$(curl $useNIC --user-agent "${UA_Browser}" -sL -m 10 "https://www.tiktok.com/")
+    if [[ "$Ftmpresult" = "curl"* ]]; then
+        echo -n -e "\r TikTok:\t\t\t\t${Font_Red}Failed (Network Connection)${Font_Suffix}\n"
+        return
+    fi
+    local FRegion=$(echo $Ftmpresult | grep '"region":' | sed 's/.*"region"//' | cut -f2 -d'"')
+    if [ -n "$FRegion" ]; then
+        echo -n -e "\r TikTok:\t\t${resultunlocktype}\t${Font_Green}Yes (Region: ${FRegion})${Font_Suffix}\n"
+        return
+    fi
+    local STmpresult=$(curl $useNIC --user-agent "${UA_Browser}" -sL -m 10 -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" -H "Accept-Encoding: gzip" -H "Accept-Language: en" "https://www.tiktok.com" | gunzip 2>/dev/null)
+    local SRegion=$(echo $STmpresult | grep '"region":' | sed 's/.*"region"//' | cut -f2 -d'"')
+    if [ -n "$SRegion" ]; then
+        echo -n -e "\r TikTok:\t\t${resultunlocktype}\t${Font_Yellow}IDC IP (Region: ${SRegion})${Font_Suffix}\n"
+        return
+    else
+        echo -n -e "\r TikTok:\t\t\t\t${Font_Red}Failed${Font_Suffix}\n"
+        return
+    fi
+}
+
 function MediaUnlockTest_Netflix() {
     local checkunlockurl="netflix.com"
     local result1=`Check_DNS_1 ${checkunlockurl}`
@@ -3812,6 +3839,7 @@ function Global_UnlockTest() {
     echo "============[ Multination ]============"
     local result=$(
     MediaUnlockTest_Dazn ${1} &
+    MediaUnlockTest_TikTok ${1} &
     MediaUnlockTest_HotStar ${1} &
     MediaUnlockTest_DisneyPlus ${1} &
     MediaUnlockTest_Netflix ${1} &
@@ -3829,7 +3857,7 @@ function Global_UnlockTest() {
     GameTest_Steam ${1} &
     )
     wait
-    local array=("Dazn:" "HotStar:" "Disney+:" "Netflix:" "YouTube Premium:" "Amazon Prime Video:" "TVBAnywhere+:" "iQyi Oversea Region:" "Viu.com:" "YouTube CDN:" "YouTube Region:" "Netflix Preferred CDN:" "Spotify Registration:" "Steam Currency:" "ChatGPT:" "Bing Region:")
+    local array=("Dazn:" "TikTok:" "HotStar:" "Disney+:" "Netflix:" "YouTube Premium:" "Amazon Prime Video:" "TVBAnywhere+:" "iQyi Oversea Region:" "Viu.com:" "YouTube CDN:" "YouTube Region:" "Netflix Preferred CDN:" "Spotify Registration:" "Steam Currency:" "ChatGPT:" "Bing Region:")
     echo_Result ${result} ${array}
     echo "======================================="
 }
