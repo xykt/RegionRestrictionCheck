@@ -62,7 +62,7 @@ fi
 
 UA_Browser="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36"
 UA_Dalvik="Dalvik/2.1.0 (Linux; U; Android 9; ALP-AL00 Build/HUAWEIALP-AL00)"
-Media_Cookie=$(curl -s --retry 3 --max-time 10 "https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/cookies")
+Media_Cookie=$(curl -s --retry 3 --max-time 10 "https://raw.githubusercontent.com/xykt/RegionRestrictionCheck/main/cookies")
 IATACode=$(curl -s --retry 3 --max-time 10 "https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/reference/IATACode.txt")
 IATACode2=$(curl -s --retry 3 --max-time 10 "https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/reference/IATACode2.txt" 2>&1)
 TVer_Cookie="Accept: application/json;pk=BCpkADawqM0_rzsjsYbC1k1wlJLU4HiAtfzjxdUmfvvLUQB-Ax6VA-p-9wOEZbCEm3u95qq2Y1CQQW1K9tPaMma9iAqUqhpISCmyXrgnlpx9soEmoVNuQpiyGsTpePGumWxSs1YoKziYB6Wz"
@@ -1125,11 +1125,11 @@ function MediaUnlockTest_iQYI_Region() {
 
 function MediaUnlockTest_HuluUS() {
     if [[ "$1" == "4" ]]; then
-        curl $useNIC $xForward -fsL -o ./Hulu4.sh.x https://github.com/lmc999/RegionRestrictionCheck/raw/main/binary/Hulu4${arch}.sh.x >/dev/null 2>&1
+        curl $useNIC $xForward -fsL -o ./Hulu4.sh.x https://github.com/xykt/RegionRestrictionCheck/raw/main/binary/Hulu4${arch}.sh.x >/dev/null 2>&1
         chmod +x ./Hulu4.sh.x
         ./Hulu4.sh.x >/dev/null 2>&1
     elif [[ "$1" == "6" ]]; then
-        curl $useNIC $xForward -fsL -o ./Hulu6.sh.x https://github.com/lmc999/RegionRestrictionCheck/raw/main/binary/Hulu6${arch}.sh.x >/dev/null 2>&1
+        curl $useNIC $xForward -fsL -o ./Hulu6.sh.x https://github.com/xykt/RegionRestrictionCheck/raw/main/binary/Hulu6${arch}.sh.x >/dev/null 2>&1
         chmod +x ./Hulu6.sh.x
         ./Hulu6.sh.x >/dev/null 2>&1
     fi
@@ -1350,9 +1350,8 @@ function MediaUnlockTest_FOD() {
 function MediaUnlockTest_YouTube_Premium() {
     local checkunlockurl="www.youtube.com"
     local result1=`Check_DNS_1 ${checkunlockurl}`
-    local result2=`Check_DNS_2 ${checkunlockurl}`
     local result3=`Check_DNS_3 ${checkunlockurl}`
-    local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result2} ${result3}`	
+    local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result3}`	
 
     local tmpresult=$(curl $useNIC $usePROXY $xForward -${1} --max-time 10 -sSL -H "Accept-Language: en" -b "YSC=BiCUU3-5Gdk; CONSENT=YES+cb.20220301-11-p0.en+FX+700; GPS=1; VISITOR_INFO1_LIVE=4VwPMkB7W5A; PREF=tz=Asia.Shanghai; _gcl_au=1.1.1809531354.1646633279" "https://www.youtube.com/premium" 2>&1)
 
@@ -2218,7 +2217,7 @@ function MediaUnlockTest_NetflixCDN() {
     local CDN_ISP=$(curl $useNIC $xForward --user-agent "${UA_Browser}" -s --max-time 20 "https://api.ip.sb/geoip/$CDNIP" 2>&1 | python -m json.tool 2>/dev/null | grep 'isp' | cut -f4 -d'"')
     local iata=$(echo $CDNAddr | cut -f3 -d"-" | sed 's/.\{3\}$//' | tr [:lower:] [:upper:])
 
-    #local IATACode2=$(curl -s --retry 3 --max-time 10 "https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/reference/IATACode2.txt" 2>&1)
+    #local IATACode2=$(curl -s --retry 3 --max-time 10 "https://raw.githubusercontent.com/xykt/RegionRestrictionCheck/main/reference/IATACode2.txt" 2>&1)
 
     local isIataFound1=$(echo "$IATACode" | grep $iata)
     local isIataFound2=$(echo "$IATACode2" | grep $iata)
@@ -4201,10 +4200,12 @@ function ScriptTitle() {
 
 function Start() {
 	  echo -e ""
-    #bash <(curl -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/reference/AD/AD${ADN})
+    #bash <(curl -s https://raw.githubusercontent.com/xykt/RegionRestrictionCheck/main/reference/AD/AD${ADN})
     bash <(curl -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/reference/AD/ADDV)
 	  echo -e ""
     bash <(curl -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/reference/AD/AD2)
+	  echo -e ""
+    bash <(curl -s https://raw.githubusercontent.com/xykt/RegionRestrictionCheck/main/reference/AD/AD)
 	  echo -e ""
     if [[ "$language" == "e" ]]; then
         echo -e "${Font_Blue}Please Select Test Region or Press ENTER to Test All Regions${Font_Suffix}"
@@ -4409,7 +4410,7 @@ function RunScript() {
             echo -e "${Font_Red}**************************${Font_Suffix}"
             echo -e "${Font_Red}*                        *${Font_Suffix}"
             echo -e "${Font_Red}*${Font_Suffix} 广告招租               ${Font_Red}*${Font_Suffix}"
-            echo -e "${Font_Red}*${Font_Suffix} 请联系：@reidschat_bot ${Font_Red}*${Font_Suffix}"
+            echo -e "${Font_Red}*${Font_Suffix} 请联系：@xythebot ${Font_Red}*${Font_Suffix}"
             echo -e "${Font_Red}*                        *${Font_Suffix}"
             echo -e "${Font_Red}**************************${Font_Suffix}"
 
