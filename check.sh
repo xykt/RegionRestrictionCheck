@@ -63,8 +63,8 @@ fi
 UA_Browser="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36"
 UA_Dalvik="Dalvik/2.1.0 (Linux; U; Android 9; ALP-AL00 Build/HUAWEIALP-AL00)"
 Media_Cookie=$(curl -s --retry 3 --max-time 10 "https://raw.githubusercontent.com/xykt/RegionRestrictionCheck/main/cookies")
-IATACode=$(curl -s --retry 3 --max-time 10 "https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/reference/IATACode.txt")
-IATACode2=$(curl -s --retry 3 --max-time 10 "https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/reference/IATACode2.txt" 2>&1)
+IATACode=$(curl -s --retry 3 --max-time 10 "https://raw.githubusercontent.com/xykt/RegionRestrictionCheck/main/reference/IATACode.txt")
+IATACode2=$(curl -s --retry 3 --max-time 10 "https://raw.githubusercontent.com/xykt/RegionRestrictionCheck/main/reference/IATACode2.txt" 2>&1)
 TVer_Cookie="Accept: application/json;pk=BCpkADawqM0_rzsjsYbC1k1wlJLU4HiAtfzjxdUmfvvLUQB-Ax6VA-p-9wOEZbCEm3u95qq2Y1CQQW1K9tPaMma9iAqUqhpISCmyXrgnlpx9soEmoVNuQpiyGsTpePGumWxSs1YoKziYB6Wz"
 
 countRunTimes() {
@@ -4201,9 +4201,9 @@ function ScriptTitle() {
 function Start() {
 	  echo -e ""
     #bash <(curl -s https://raw.githubusercontent.com/xykt/RegionRestrictionCheck/main/reference/AD/AD${ADN})
-    bash <(curl -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/reference/AD/ADDV)
+    bash <(curl -s https://raw.githubusercontent.com/xykt/RegionRestrictionCheck/main/reference/AD/ADDV)
 	  echo -e ""
-    bash <(curl -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/reference/AD/AD2)
+    bash <(curl -s https://raw.githubusercontent.com/xykt/RegionRestrictionCheck/main/reference/AD/AD2)
 	  echo -e ""
     bash <(curl -s https://raw.githubusercontent.com/xykt/RegionRestrictionCheck/main/reference/AD/AD)
 	  echo -e ""
