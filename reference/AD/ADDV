@@ -19,4 +19,3 @@ echo -e "${Font_SkyBlue}✅ 硅谷Epyc 7R12 4C8G 300GSSD数据盘 +300Mbps不限
 echo -e "${Font_SkyBlue}✅ 迪拜本地IP VPS Tiktok等电商业务首选${Font_Suffix}"
 echo -e "${Font_Red}更多套餐优惠请访问 https://iPraft.com  或TG联系 @ipraft${Font_Suffix}"
 echo -e "================================================"
-echo ""
