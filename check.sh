@@ -103,6 +103,9 @@ checkOS() {
     elif [ "$(which dnf 2>/dev/null)" ] || [ "$(which yum 2>/dev/null)" ]; then
         InstallMethod="yum"
         is_redhat=1
+    elif [ "$(which apk 2>/dev/null)" ]; then
+        InstallMethod="apk"
+        is_alpine=1
     elif [[ "$os_version" == "Termux" ]]; then
         InstallMethod="pkg"
     elif [[ "$os_version" == "MacOS" ]]; then
@@ -147,7 +150,10 @@ checkDependencies() {
                     $InstallMethod makecache >/dev/null 2>&1
                     $InstallMethod install python -y >/dev/null 2>&1
                 fi
-
+            elif [ "$is_alpine" == 1 ]; then
+                echo -e "${Font_Green}Installing python${Font_Suffix}"
+                $InstallMethod update >/dev/null 2>&1
+                $InstallMethod add python3 >/dev/null 2>&1
             elif [ "$is_termux" == 1 ]; then
                 echo -e "${Font_Green}Installing python${Font_Suffix}"
                 $InstallMethod update -y >/dev/null 2>&1
@@ -169,6 +175,10 @@ checkDependencies() {
             echo -e "${Font_Green}Installing bind-utils${Font_Suffix}"
             $InstallMethod makecache >/dev/null 2>&1
             $InstallMethod install bind-utils -y >/dev/null 2>&1
+        elif [ "$is_alpine" == 1 ]; then
+            echo -e "${Font_Green}Installing bind-tools${Font_Suffix}"
+            $InstallMethod update >/dev/null 2>&1
+            $InstallMethod add bind-tools >/dev/null 2>&1
         elif [ "$is_termux" == 1 ]; then
             echo -e "${Font_Green}Installing dnsutils${Font_Suffix}"
             $InstallMethod update -y >/dev/null 2>&1
