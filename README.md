@@ -26,6 +26,10 @@
 
 2024/02/12 00:45 增加Alpine系统支持
 
+2024/02/17 16:00 修复Now E，感谢[RikkaNaa](https://github.com/RikkaNaa)
+
+2024/02/18 22:00 修复LineTV.tw
+
 ## 使用方法
 
 **使用脚本前请确认curl已安装**
