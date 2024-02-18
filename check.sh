@@ -1212,12 +1212,7 @@ function MediaUnlockTest_Salto() {
 }
 
 function MediaUnlockTest_LineTV.TW() {
-    local tmpresult=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} -s --max-time 10 "https://www.linetv.tw/api/part/11829/eps/1/part?chocomemberId=" 2>&1)
-    if [[ "$tmpresult" = "curl"* ]]; then
-        echo -n -e "\r LineTV.TW:\t\t\t\t${Font_Red}Failed (Network Connection)${Font_Suffix}\n"
-        return
-    fi
-    result=$(echo $tmpresult | python -m json.tool 2>/dev/null | grep 'countryCode' | awk '{print $2}' | cut -f1 -d',')
+    result=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} -s --max-time 10 "https://www.linetv.tw/api/part/15848/eps/1/part?appId=062097f1b1f34e11e7f82aag22000aee" 2>&1 | python -m json.tool 2>/dev/null | grep 'countryCode' | awk '{print $2}' | cut -f1 -d',')
     if [ -n "$result" ]; then
         if [ "$result" = "228" ]; then
             echo -n -e "\r LineTV.TW:\t\t\t\t${Font_Green}Yes${Font_Suffix}\n"
@@ -1227,10 +1222,9 @@ function MediaUnlockTest_LineTV.TW() {
             return
         fi
     else
-        echo -n -e "\r LineTV.TW:\t\t\t\t${Font_Red}Failed (Unexpected Result: $result)${Font_Suffix}\n"
+        echo -n -e "\r LineTV.TW:\t\t\t\t${Font_Red}Failed (Network Connection)${Font_Suffix}\n"
         return
     fi
-
 }
 
 function MediaUnlockTest_Viu.com() {
