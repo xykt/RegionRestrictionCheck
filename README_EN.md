@@ -71,6 +71,8 @@ docker run --rm -ti --net=host xykt/regioncheck && docker rmi xykt/regioncheck
 
 ## Contribution
 
+**Acknowledgments:**
+
 - Thanks to [lmc999 original work](https://github.com/lmc999/RegionRestrictionCheck), this revised script evolved from it
 
 - This script is modified based on the code of [CoiaPrant/MediaUnlock_Test](https://github.com/CoiaPrant/MediaUnlock_Test)
