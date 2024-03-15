@@ -4243,9 +4243,6 @@ function ScriptTitle() {
 
 function Start() {
 	  echo -e ""
-    #bash <(curl -s https://raw.githubusercontent.com/xykt/RegionRestrictionCheck/main/reference/AD/AD${ADN})
-    bash <(curl -s https://raw.githubusercontent.com/xykt/RegionRestrictionCheck/main/reference/AD/ADDV)
-	  echo -e ""
     bash <(curl -s https://raw.githubusercontent.com/xykt/RegionRestrictionCheck/main/reference/AD/AD2)
 	  echo -e ""
     bash <(curl -s https://raw.githubusercontent.com/xykt/RegionRestrictionCheck/main/reference/AD/AD)
