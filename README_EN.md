@@ -4,7 +4,7 @@
 <a href="/LICENSE"><img src="https://img.shields.io/badge/license-GPL-blue.svg" alt="license" /></a>  
 </p>
 
-## Streaming Unlock Check Script 
+## Streaming Unlock Test Script 
 
 **Support OS/Platform：CentOS 6+, Ubuntu 14.04+, Debian 8+, Alpine, MacOS, Android with Termux, [iOS](https://github.com/lmc999/RegionRestrictionCheck/wiki/iOS%E8%BF%90%E8%A1%8C%E8%84%9A%E6%9C%AC%E6%96%B9%E6%B3%95)**
 
