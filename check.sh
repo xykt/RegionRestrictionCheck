@@ -820,7 +820,7 @@ function MediaUnlockTest_MyTVSuper() {
     local result3=`Check_DNS_3 ${checkunlockurl}`
     local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result3}`
 
-    local result=$(curl $useNIC $usePROXY $xForward -s -${1} --max-time 10 "https://www.mytvsuper.com/api/auth/getSession/self/" 2>&1 | python -m json.tool 2>/dev/null | grep 'region' | awk '{print $2}')
+    local result=$(curl $useNIC $usePROXY $xForward -s -${1} --max-time 10 "https://www.mytvsuper.com/api/auth/getSession/self/" 2>&1 | python -m json.tool 2>/dev/null | grep 'region' | awk '{print $2}' | tr -d ",")
 
     if [[ "$result" == "1" ]]; then
         echo -n -e "\r MyTVSuper:\t\t${resultunlocktype}\t${Font_Green}Yes${Font_Suffix}\n"
