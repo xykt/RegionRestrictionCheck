@@ -1,96 +1,88 @@
-## Introduction
-This script was modified based on [CoiaPrant/MediaUnlock_Test](https://github.com/CoiaPrant/MediaUnlock_Test)
+<p align="center">
+<img src="https://hits.seeyoufarm.com/api/count/keep/badge.svg?url=https%3A%2F%2Fmedia.ispvps.com&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=runs&edge_flat=false"/> 
+<img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fxykt%2FRegionRestrictionCheck&count_bg=%233DC8C0&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=visits&edge_flat=false"/> 
+<a href="/LICENSE"><img src="https://img.shields.io/badge/license-GPL-blue.svg" alt="license" /></a>  
+</p>
 
-+ Optimise Disneyplus accuracy
+## Streaming Unlock Check Script 
 
-+ Add MyTVSuper
+**Support OS/Platform：CentOS 6+, Ubuntu 14.04+, Debian 8+, Alpine, MacOS, Android with Termux, [iOS](https://github.com/lmc999/RegionRestrictionCheck/wiki/iOS%E8%BF%90%E8%A1%8C%E8%84%9A%E6%9C%AC%E6%96%B9%E6%B3%95)**
 
-+ Add Dazn
+![ScreenShot](https://raw.githubusercontent.com/xykt/RegionRestrictionCheck/main/reference/IMG/ScreenShot.png)
 
-+ Add Hulu Japan
+**Please make sure curl is installed before using the script**
 
-+ Add Pretty Derby (Game)
-
-+ Add Kancolle (Game)
-
-+ Add Now E
-
-+ Add Viu TV
-
-+ Add U-NEXT VIDEO
-
-+ Add Paravi
-
-+ Optimise Abema accuracy
-
-+ Add WOWOW
-
-+ Add TVer
-
-+ Add Hami Video
-
-+ Add 4GTV
-
-+ Add Sling TV
-
-+ Add Pluto TV
-
-+ Add HBO Max
-
-+ Add Channel 4
-
-+ Add ITV Hub
-
-+ Add iQiyi
-
-+ Add Hulu US
-
-+ Add encoreTVB
-
-+ Add LineTV TW
-
-+ Add Viu.com
-
-+ Add Niconico
-
-+ Add Paramount+
-
-+ Add KKTV
-
-+ Add Peakcock TV
-
-+ Add FOD
-
-## How to use
-
-**Make sure you have curl and python installed**
-
-**General Use**
 ````bash
-bash <(curl -L -s https://git.io/JRw8R) -E
+bash <(curl -L -s media.ispvps.com)
 ````
 
-**Test IPv4 Result Only**
+##### IPv4 Only:
 ````bash
-bash <(curl -L -s https://git.io/JRw8R) -E -M 4
+bash <(curl -L -s media.ispvps.com) -M 4
 ````
 
-**Test IPv6 Result Only**
+##### IPv6 Only:
 ````bash
-bash <(curl -L -s https://git.io/JRw8R) -E -M 6
+bash <(curl -L -s media.ispvps.com) -M 6
 ````
 
-**Specify a Certain Interface to be Tested**
+##### Specify network adapter:
 ````bash
-bash <(curl -L -s https://git.io/JRw8R) -E -I eth0
+bash <(curl -L -s media.ispvps.com) -I eth0
 ````
 
-**Or run in docker**
+##### English output:
+````bash
+bash <(curl -L -s media.ispvps.com) -E
+````
+
+**Docker Command** (Compatible with ARM)
 ````docker
-docker run --rm -ti --net=host lmc999/regioncheck && docker rmi lmc999/regioncheck
+docker run --rm -ti --net=host xykt/regioncheck && docker rmi xykt/regioncheck
 ````
 
+## Updates
 
-## Thanks To
-[柠檬大佬](https://t.me/ilemonrain), please support [Lemonbench](https://github.com/LemonBench/LemonBench)
+2024/02/20 01:30 Fixed the bug of Docker running error and completed the full-region detection project
+
+2024/02/18 22:00 Repair LineTV.tw
+
+2024/02/17 16:00 Fix Now E, thanks to [RikkaNaa](https://github.com/RikkaNaa)
+
+2024/02/12 00:45 Add Alpine system support
+
+2024/02/09 23:59 The revision of the Netflix page resulted in an error in the original script judgment, which has been corrected.
+
+2024/01/31 00:30 Fixed the problem of incorrect judgment of Youtube’s very unlikely unlock category
+
+2024/01/08 13:01 Add TikTok unlock detection
+
+2024/01/07 21:55 Added DNS unlock detection for Anime Crazy, MyTVSuper, and 4GTV
+
+2024/01/04 18:55 Increase independent script running counter
+
+2024/01/03 23:27 Upgrade DNS detection mechanism, add proxy server unlock detection, correct the bug that pure IPv6 machines cannot detect
+
+2024/01/02 23:00 Add a dual DNS detection mechanism, correct the original Japanese streaming media detection error, and pre-advertise
+
+2024/01/02 03:00 Improved detection mechanism to eliminate some misjudgments
+
+2024/01/01 21:00 Add DNS/Native unlock detection mechanism
+
+## Contribution
+
+- Thanks to [lmc999 original work](https://github.com/lmc999/RegionRestrictionCheck), this revised script evolved from it
+
+- This script is modified based on the code of [CoiaPrant/MediaUnlock_Test](https://github.com/CoiaPrant/MediaUnlock_Test)
+
+- [onoc1yn](https://github.com/onoc1yn) provides multi-architecture docker solutions and Hulu Cookies encryption solutions
+
+- The streaming media unlocking detection scripts currently on the market are all evolved from [Lemonbench](https://github.com/LemonBench/LemonBench)
+
+**Contributors:**
+
+<a href="https://github.com/RikkaNaa"><img src="https://avatars.githubusercontent.com/u/98643870?s=60&v=4" alt="@RikkaNaa" size="48" height="48" width="48" data-view-component="true"></img></a>
+
+**Stars History:**
+![Stargazers over time](https://starchart.cc/xykt/RegionRestrictionCheck.svg?background=%23FFFFFF&axis=%23333333&line=%2377dd77)
 
