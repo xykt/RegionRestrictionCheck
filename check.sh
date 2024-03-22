@@ -4224,7 +4224,7 @@ function Goodbye() {
 
     if [[ "$language" == "e" ]]; then
         echo -e "${Font_Green}Testing Done! Thanks for Using This Script! ${Font_Suffix}"
-        echo -e "${Font_Yellow}Number of Script Runs for Today: ${TodayRunTimes}; Total Number of Script Runs: ${TotalRunTimes} ${Font_Suffix}"
+        echo -e "${Font_Yellow}Script Runs Today: ${TodayRunTimes}; Script Runs Total: ${TotalRunTimes} ${Font_Suffix}"
         echo -e ""
     else
         echo -e "${Font_Green}本次测试已结束，感谢使用此脚本 ${Font_Suffix}"
