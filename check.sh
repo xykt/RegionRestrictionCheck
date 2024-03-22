@@ -376,26 +376,47 @@ function Check_DNS_3()
 
 function Get_Unlock_Type()
 {
-    
-    while [ $# -ne 0 ]
-    do
-#        if [ "$1" = "3" ];then
-#            local resultwarp=`ip addr | grep "warp:" | awk '{print $2}'`
-#            if [ "${resultwarp}" == "warp:" ];then
-#                echo "${Font_Yellow}代理解锁${Font_Suffix}"
-#                return
-#            fi
-#        elif [ "$1" = "2" ];then
-#            echo "${Font_Yellow}代理解锁${Font_Suffix}"
-#            return
-#        elif [ "$1" = "0" ];then
-        if [ "$1" = "0" ];then
-            echo "${Font_Yellow}DNS 解锁${Font_Suffix}"
-            return
-        fi
-        shift
-    done
-    echo "${Font_Green}原生解锁${Font_Suffix}"
+    if [[ "$language" == "e" ]]; then
+		    while [ $# -ne 0 ]
+		    do
+		#        if [ "$1" = "3" ];then
+		#            local resultwarp=`ip addr | grep "warp:" | awk '{print $2}'`
+		#            if [ "${resultwarp}" == "warp:" ];then
+		#                echo "${Font_Yellow}Proxy${Font_Suffix}"
+		#                return
+		#            fi
+		#        elif [ "$1" = "2" ];then
+		#            echo "${Font_Yellow}Via Proxy${Font_Suffix}"
+		#            return
+		#        elif [ "$1" = "0" ];then
+		        if [ "$1" = "0" ];then
+		            echo "${Font_Yellow}Via DNS\t${Font_Suffix}"
+		            return
+		        fi
+		        shift
+		    done
+		    echo "${Font_Green}Native\t${Font_Suffix}"
+    else
+		    while [ $# -ne 0 ]
+		    do
+		#        if [ "$1" = "3" ];then
+		#            local resultwarp=`ip addr | grep "warp:" | awk '{print $2}'`
+		#            if [ "${resultwarp}" == "warp:" ];then
+		#                echo "${Font_Yellow}代理解锁${Font_Suffix}"
+		#                return
+		#            fi
+		#        elif [ "$1" = "2" ];then
+		#            echo "${Font_Yellow}代理解锁${Font_Suffix}"
+		#            return
+		#        elif [ "$1" = "0" ];then
+		        if [ "$1" = "0" ];then
+		            echo "${Font_Yellow}DNS 解锁${Font_Suffix}"
+		            return
+		        fi
+		        shift
+		    done
+		    echo "${Font_Green}原生解锁${Font_Suffix}"
+		fi
 }
 
 function Check_Proxy()
@@ -3476,17 +3497,18 @@ function OpenAITest(){
     local tmpresult2=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} -sS --max-time 10 'https://ios.chat.openai.com/' -H 'authority: ios.chat.openai.com'   -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'   -H 'accept-language: zh-CN,zh;q=0.9' -H 'sec-ch-ua: "Microsoft Edge";v="119", "Chromium";v="119", "Not?A_Brand";v="24"'   -H 'sec-ch-ua-mobile: ?0'   -H 'sec-ch-ua-platform: "Windows"'   -H 'sec-fetch-dest: document'   -H 'sec-fetch-mode: navigate'   -H 'sec-fetch-site: none'   -H 'sec-fetch-user: ?1'   -H 'upgrade-insecure-requests: 1'   -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0' 2>&1)
     local result1=$(echo $tmpresult1 | grep unsupported_country)
     local result2=$(echo $tmpresult2 | grep VPN)
+    local countryCode="$(curl --max-time 10 -sS https://chat.openai.com/cdn-cgi/trace | grep "loc=" | awk -F= '{print $2}')";
     if [ -z "$result2" ] && [ -z "$result1" ] && [[ "$tmpresult1" != "curl"* ]] && [[ "$tmpresult2" != "curl"* ]]; then
-        echo -n -e "\r ChatGPT:\t\t${resultunlocktype}\t${Font_Green}Yes${Font_Suffix}\n"
+        echo -n -e "\r ChatGPT:\t\t${resultunlocktype}\t${Font_Green}Yes (Region: ${countryCode})${Font_Suffix}\n"
         return
     elif [ -n "$result2" ] && [ -n "$result1" ]; then
         echo -n -e "\r ChatGPT:\t\t\t\t${Font_Red}No${Font_Suffix}\n"
         return
     elif [ -z "$result1" ] && [ -n "$result2" ] && [[ "$tmpresult1" != "curl"* ]]; then
-        echo -n -e "\r ChatGPT:\t\t${resultunlocktype}\t${Font_Yellow}Only Available with Web Browser${Font_Suffix}\n"
+        echo -n -e "\r ChatGPT:\t\t${resultunlocktype}\t${Font_Yellow}Website Only (Region: ${countryCode})${Font_Suffix}\n"
         return
     elif [ -n "$result1" ] && [ -z "$result2" ]; then
-        echo -n -e "\r ChatGPT:\t\t${resultunlocktype}\t${Font_Yellow}Only Available with Mobile APP${Font_Suffix}\n"
+        echo -n -e "\r ChatGPT:\t\t${resultunlocktype}\t${Font_Yellow}APP Only (Region: ${countryCode})${Font_Suffix}\n"
         return
     elif [[ "$tmpresult1" == "curl"* ]] && [ -n "$result2" ]; then
         echo -n -e "\r ChatGPT:\t\t\t\t${Font_Red}No${Font_Suffix}\n"
@@ -3494,7 +3516,6 @@ function OpenAITest(){
     else
         echo -n -e "\r ChatGPT:\t\t\t\t${Font_Red}Failed${Font_Suffix}\n"
         return
-    
     fi
 }
 
@@ -4204,11 +4225,7 @@ function Goodbye() {
     if [[ "$language" == "e" ]]; then
         echo -e "${Font_Green}Testing Done! Thanks for Using This Script! ${Font_Suffix}"
         echo -e "${Font_Yellow}Number of Script Runs for Today: ${TodayRunTimes}; Total Number of Script Runs: ${TotalRunTimes} ${Font_Suffix}"
-        echo -e "========================================================="
-        echo -e "${Font_Red}If you found this script helpful, you can but me a coffee${Font_Suffix}"
         echo -e ""
-        echo -e "LTC: LQD4S6Y5bu3bHX6hx8ASsGHVfaqFGFNTbx"
-        echo -e "========================================================="
     else
         echo -e "${Font_Green}本次测试已结束，感谢使用此脚本 ${Font_Suffix}"
         echo -e "${Font_Yellow}检测脚本当天运行次数: ${TodayRunTimes}; 共计运行次数: ${TotalRunTimes} ${Font_Suffix}"
