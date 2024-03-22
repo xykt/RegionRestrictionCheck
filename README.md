@@ -43,6 +43,10 @@ docker run --rm -ti --net=host xykt/regioncheck && docker rmi xykt/regioncheck
 
 ## 脚本更新
 
+2024/03/22 09:45 修复MyTVSuper，感谢[RikkaNaa](https://github.com/RikkaNaa)
+
+2024/03/22 09:30 增加ChatGPT地区检测，更新英文原生/DNS解锁显示内容
+
 2024/02/20 01:30 修正Docker运行报错的bug，补全全区域检测项目
 
 2024/02/18 22:00 修复LineTV.tw
