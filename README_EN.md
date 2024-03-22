@@ -65,7 +65,7 @@ docker run --rm -ti --net=host xykt/regioncheck && docker rmi xykt/regioncheck
 
 2024/01/04 18:55 Increase independent script running counter
 
-2024/01/03 23:27 Upgrade DNS detection mechanism, add proxy server unlock detection, correct the bug that pure IPv6 machines cannot detect
+2024/01/03 23:27 Upgrade DNS detection mechanism, add proxy server unlock detection, correct the bug that IPv6 hosts cannot detect
 
 2024/01/02 23:00 Add a dual DNS detection mechanism, correct the original Japanese streaming media detection error, and pre-advertise
 
