@@ -43,6 +43,10 @@ docker run --rm -ti --net=host xykt/regioncheck && docker rmi xykt/regioncheck
 
 ## Updates
 
+2024/03/22 09:45 Fix MyTVSuper, thanks to [RikkaNaa](https://github.com/RikkaNaa)
+
+2024/03/22 09:30 Added ChatGPT region detection, updated English native/DNS unlocking display content
+
 2024/02/20 01:30 Fixed the bug of Docker running error and completed the full-region detection project
 
 2024/02/18 22:00 Repair LineTV.tw
