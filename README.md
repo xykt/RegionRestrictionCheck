@@ -38,7 +38,7 @@ bash <(curl -L -s media.ispvps.com) -E
 
 **或者直接运行以下Docker命令** (兼容ARM架构)
 ````docker
-docker run --rm -ti --net=host xykt/regioncheck && docker rmi xykt/regioncheck
+docker run --rm -ti --net=host xykt/regioncheck && docker rmi xykt/regioncheck > /dev/null 2>&1
 ````
 
 ## 脚本更新
