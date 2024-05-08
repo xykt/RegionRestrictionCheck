@@ -43,6 +43,8 @@ docker run --rm -ti --net=host xykt/regioncheck && docker rmi xykt/regioncheck >
 
 ## Updates
 
+2024/05/09 00:40 Fixed issue with Netflix Australia detection, added Wikipedia and Reddit detection
+
 2024/03/22 09:45 Fix MyTVSuper, thanks to [RikkaNaa](https://github.com/RikkaNaa)
 
 2024/03/22 09:30 Added ChatGPT region detection, updated English native/DNS unlocking display content
@@ -84,10 +86,6 @@ docker run --rm -ti --net=host xykt/regioncheck && docker rmi xykt/regioncheck >
 - [onoc1yn](https://github.com/onoc1yn) provides multi-architecture docker solutions and Hulu Cookies encryption solutions
 
 - The streaming media unlocking detection scripts currently on the market are all evolved from [Lemonbench](https://github.com/LemonBench/LemonBench)
-
-**Contributors:**
-
-<a href="https://github.com/RikkaNaa"><img src="https://avatars.githubusercontent.com/u/98643870?s=60&v=4" alt="@RikkaNaa" size="48" height="48" width="48" data-view-component="true"></img></a>
 
 **Stars History:**
 ![Stargazers over time](https://starchart.cc/xykt/RegionRestrictionCheck.svg?background=%23FFFFFF&axis=%23333333&line=%2377dd77)
