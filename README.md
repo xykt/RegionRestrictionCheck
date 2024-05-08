@@ -43,6 +43,8 @@ docker run --rm -ti --net=host xykt/regioncheck && docker rmi xykt/regioncheck >
 
 ## 脚本更新
 
+2024/05/09 00:40 修正Netflix澳洲检测错误问题，增加Wikipedia及Reddit检测
+
 2024/03/22 09:45 修复MyTVSuper，感谢[RikkaNaa](https://github.com/RikkaNaa)
 
 2024/03/22 09:30 增加ChatGPT地区检测，更新英文原生/DNS解锁显示内容
