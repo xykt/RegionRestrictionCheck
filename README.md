@@ -87,10 +87,6 @@ docker run --rm -ti --net=host xykt/regioncheck && docker rmi xykt/regioncheck >
 
 - 目前市面的流媒体解锁检测脚本都是从[Lemonbench](https://github.com/LemonBench/LemonBench)演化而来
 
-**Contributors:**
-
-<a href="https://github.com/RikkaNaa"><img src="https://avatars.githubusercontent.com/u/98643870?s=60&v=4" alt="@RikkaNaa" size="48" height="48" width="48" data-view-component="true"></img></a>
-
 **Stars History:**
 ![Stargazers over time](https://starchart.cc/xykt/RegionRestrictionCheck.svg?background=%23FFFFFF&axis=%23333333&line=%2377dd77)
 
