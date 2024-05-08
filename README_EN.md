@@ -38,7 +38,7 @@ bash <(curl -L -s media.ispvps.com) -E
 
 **Docker Command** (Compatible with ARM)
 ````docker
-docker run --rm -ti --net=host xykt/regioncheck && docker rmi xykt/regioncheck
+docker run --rm -ti --net=host xykt/regioncheck && docker rmi xykt/regioncheck > /dev/null 2>&1
 ````
 
 ## Updates
