@@ -742,7 +742,7 @@ function MediaUnlockTest_TikTok() {
     local result3=`Check_DNS_3 ${checkunlockurl}`
     local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result3}`
 
-    local Ftmpresult=$(curl $useNIC --user-agent "${UA_Browser}" -sL -m 10 "https://www.tiktok.com/")
+    local Ftmpresult=$(curl $useNIC $usePROXY $xForward --user-agent "${UA_Browser}" -sL -m 10 "https://www.tiktok.com/")
     if [[ "$Ftmpresult" = "curl"* ]]; then
         echo -n -e "\r TikTok:\t\t\t\t${Font_Red}Failed (Network Connection)${Font_Suffix}\n"
         return
@@ -752,7 +752,7 @@ function MediaUnlockTest_TikTok() {
         echo -n -e "\r TikTok:\t\t${resultunlocktype}\t${Font_Green}Yes (Region: ${FRegion})${Font_Suffix}\n"
         return
     fi
-    local STmpresult=$(curl $useNIC --user-agent "${UA_Browser}" -sL -m 10 -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" -H "Accept-Encoding: gzip" -H "Accept-Language: en" "https://www.tiktok.com" | gunzip 2>/dev/null)
+    local STmpresult=$(curl $useNIC $usePROXY $xForward --user-agent "${UA_Browser}" -sL -m 10 -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" -H "Accept-Encoding: gzip" -H "Accept-Language: en" "https://www.tiktok.com" | gunzip 2>/dev/null)
     local SRegion=$(echo $STmpresult | grep '"region":' | sed 's/.*"region"//' | cut -f2 -d'"')
     if [ -n "$SRegion" ]; then
         echo -n -e "\r TikTok:\t\t${resultunlocktype}\t${Font_Yellow}IDC IP (Region: ${SRegion})${Font_Suffix}\n"
@@ -770,9 +770,9 @@ function MediaUnlockTest_Netflix() {
     local result3=`Check_DNS_3 ${checkunlockurl}`
     local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result2} ${result3}`
     
-    local result1=$(curl $curlArgs -${1} --user-agent "${UA_Browser}" -fsLI -X GET --write-out %{http_code} --output /dev/null --max-time 10 --tlsv1.3 "https://www.netflix.com/title/81280792"  2>&1)
-    local result2=$(curl $curlArgs -${1} --user-agent "${UA_Browser}" -fsLI -X GET --write-out %{http_code} --output /dev/null --max-time 10 --tlsv1.3 "https://www.netflix.com/title/70143836" 2>&1)
-    local regiontmp=$(curl $curlArgs -${1} --user-agent "${UA_Browser}" -fSsI -X GET --max-time 10 --write-out %{redirect_url} --output /dev/null --tlsv1.3 "https://www.netflix.com/login" 2>&1 )
+    local result1=$(curl $useNIC $usePROXY $xForward -${1} --user-agent "${UA_Browser}" -fsLI -X GET --write-out %{http_code} --output /dev/null --max-time 10 --tlsv1.3 "https://www.netflix.com/title/81280792"  2>&1)
+    local result2=$(curl $useNIC $usePROXY $xForward -${1} --user-agent "${UA_Browser}" -fsLI -X GET --write-out %{http_code} --output /dev/null --max-time 10 --tlsv1.3 "https://www.netflix.com/title/70143836" 2>&1)
+    local regiontmp=$(curl $useNIC $usePROXY $xForward -${1} --user-agent "${UA_Browser}" -fSsI -X GET --max-time 10 --write-out %{redirect_url} --output /dev/null --tlsv1.3 "https://www.netflix.com/login" 2>&1 )
     if [[ "$regiontmp" == "curl"* ]]; then
         echo -n -e "\r Netflix:\t\t\t\t${Font_Red}Failed (Network Connection)${Font_Suffix}\n"
         return
