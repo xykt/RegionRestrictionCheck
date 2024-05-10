@@ -1,7 +1,7 @@
 <p align="center">
 <img src="https://hits.seeyoufarm.com/api/count/keep/badge.svg?url=https%3A%2F%2Fmedia.ispvps.com&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=runs&edge_flat=false"/> 
 <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fxykt%2FRegionRestrictionCheck&count_bg=%233DC8C0&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=visits&edge_flat=false"/> 
-<a href="/LICENSE"><img src="[https://img.shields.io/badge/license-GPL-blue.svg](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)" alt="license" /></a>  
+<a href="/LICENSE"><img src="https://img.shields.io/badge/License-AGPL%20v3-blue.svg" alt="license" /></a>  
 </p>
 
 ## 流媒体解锁检测脚本 -  [Streaming Unlock Test Script (EN)](https://github.com/xykt/RegionRestrictionCheck/blob/main/README_EN.md)
