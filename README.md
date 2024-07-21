@@ -13,27 +13,27 @@
 **使用脚本前请确认curl已安装**
 
 ````bash
-bash <(curl -L -s media.ispvps.com)
+bash <(curl -L -s Media.Check.Place)
 ````
 
 ##### 只检测IPv4结果：
 ````bash
-bash <(curl -L -s media.ispvps.com) -M 4
+bash <(curl -L -s Media.Check.Place) -M 4
 ````
 
 ##### 只检测IPv6结果：
 ````bash
-bash <(curl -L -s media.ispvps.com) -M 6
+bash <(curl -L -s Media.Check.Place) -M 6
 ````
 
 ##### 指定检测的网卡名称：
 ````bash
-bash <(curl -L -s media.ispvps.com) -I eth0
+bash <(curl -L -s Media.Check.Place) -I eth0
 ````
 
 ##### 选择脚本语言为英文：
 ````bash
-bash <(curl -L -s media.ispvps.com) -E
+bash <(curl -L -s Media.Check.Place) -E
 ````
 
 ## 脚本更新
