@@ -36,12 +36,9 @@ bash <(curl -L -s media.ispvps.com) -I eth0
 bash <(curl -L -s media.ispvps.com) -E
 ````
 
-**或者直接运行以下Docker命令** (兼容ARM架构)
-````docker
-docker run --rm -ti --net=host xykt/regioncheck && docker rmi xykt/regioncheck > /dev/null 2>&1
-````
-
 ## 脚本更新
+
+2024/07/22 02:40 增加Google Gemini检测，修复Disney+解锁类型错误；因展示原版广告，改版运行次数同时计入原版
 
 2024/05/09 00:40 修正Netflix澳洲检测错误问题，增加Wikipedia及Reddit检测
 
