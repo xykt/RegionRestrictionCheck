@@ -95,10 +95,9 @@ IATACode=$(curl -s --retry 3 --max-time 10 "https://raw.githubusercontent.com/xy
 IATACode2=$(curl -s --retry 3 --max-time 10 "https://raw.githubusercontent.com/xykt/RegionRestrictionCheck/main/reference/IATACode2.txt" 2>&1)
 
 countRunTimes() {
-    local origincount=$(curl -s --max-time 10 "https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fcheck.unclock.media&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=visit&edge_flat=false" 2>&1)
-    local tmpresult=$(curl -s --max-time 10 "https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fmedia.ispvps.com&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=runs&edge_flat=false" 2>&1)
-    TodayRunTimes=$(echo "$tmpresult" | tail -3 | head -n 1 | awk '{print $5}')
-    TotalRunTimes=$(echo "$tmpresult" | tail -3 | head -n 1 | awk '{print $7}')
+    local RunTimes=$(curl ${CurlARG} -s --max-time 10 "https://hits.xykt.de/ip?action=hit" 2>&1)
+    TodayRunTimes=$(echo "${RunTimes}"|jq '.daily')
+    TotalRunTimes=$(echo "${RunTimes}"|jq '.total')
 }
 countRunTimes
 
