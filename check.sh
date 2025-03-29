@@ -95,7 +95,7 @@ IATACode=$(curl -s --retry 3 --max-time 10 "https://raw.githubusercontent.com/xy
 IATACode2=$(curl -s --retry 3 --max-time 10 "https://raw.githubusercontent.com/xykt/RegionRestrictionCheck/main/reference/IATACode2.txt" 2>&1)
 
 countRunTimes() {
-    local RunTimes=$(curl ${CurlARG} -s --max-time 10 "https://hits.xykt.de/ip?action=hit" 2>&1)
+    local RunTimes=$(curl ${CurlARG} -s --max-time 10 "https://hits.xykt.de/media?action=hit" 2>&1)
     TodayRunTimes=$(echo "${RunTimes}"|jq '.daily')
     TotalRunTimes=$(echo "${RunTimes}"|jq '.total')
 }
