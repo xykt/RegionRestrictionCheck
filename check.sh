@@ -3691,6 +3691,27 @@ function OpenAITest(){
     local tmpresult2=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} -sS --max-time 10 'https://ios.chat.openai.com/' -H 'authority: ios.chat.openai.com' -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7' -H 'accept-language: zh-CN,zh;q=0.9' -H "sec-ch-ua: ${UA_SecCHUA}" -H 'sec-ch-ua-mobile: ?0' -H 'sec-ch-ua-platform: "Windows"' -H 'sec-fetch-dest: document' -H 'sec-fetch-mode: navigate' -H 'sec-fetch-site: none' -H 'sec-fetch-user: ?1' -H 'upgrade-insecure-requests: 1' 2>&1)
     local result1=$(echo $tmpresult1 | grep unsupported_country)
     local result2=$(echo $tmpresult2 | grep VPN)
+    if [ -n "$result1" ]; then
+        code=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} -o /dev/null -sS --max-time 10 \
+          'https://chatgpt.com/favicon.ico' \
+          -H 'accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8' \
+          -H 'authority: chatgpt.com' \
+          -H 'accept: */*' \
+          -H 'accept-language: zh-CN,zh;q=0.9' \
+          -H 'authorization: Bearer null' \
+          -H 'content-type: application/json' \
+          -H 'origin: https://chatgpt.com' \
+          -H 'referer: https://chatgpt.com/' \
+          -H 'sec-ch-ua: "Microsoft Edge";v="119", "Chromium";v="119", "Not?A_Brand";v="24"' \
+          -H 'sec-ch-ua-mobile: ?0' \
+          -H 'sec-ch-ua-platform: "Windows"' \
+          -H 'sec-fetch-dest: empty' \
+          -H 'sec-fetch-mode: cors' \
+          -H 'sec-fetch-site: same-site' \
+          -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0' \
+          -w "%{http_code}" 2>&1)
+        [[ "$code" != "403" ]] && result1=""
+    fi
     local countryCode="$(curl --max-time 10 -sS https://chat.openai.com/cdn-cgi/trace | grep "loc=" | awk -F= '{print $2}')";
     if [ -z "$result2" ] && [ -z "$result1" ] && [[ "$tmpresult1" != "curl"* ]] && [[ "$tmpresult2" != "curl"* ]]; then
         echo -n -e "\r ChatGPT:\t\t${resultunlocktype}\t${Font_Green}Yes (Region: ${countryCode})${Font_Suffix}\n"
