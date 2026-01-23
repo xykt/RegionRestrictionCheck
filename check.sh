@@ -735,8 +735,8 @@ function MediaUnlockTest_TikTok() {
     local result1=`Check_DNS_1 ${checkunlockurl}`
     local result3=`Check_DNS_3 ${checkunlockurl}`
     local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result3}`
-
     local Ftmpresult=$(curl $useNIC $usePROXY $xForward --user-agent "${UA_Browser}" -sL -m 10 "https://www.tiktok.com/")
+    [[ "$Ftmpresult" = *"Please wait..."* ]] && Ftmpresult=$(curl $useNIC $usePROXY $xForward --user-agent "${UA_Browser}" -sL -m 10 "https://www.tiktok.com/explore")
     if [[ "$Ftmpresult" = "curl"* ]]; then
         echo -n -e "\r TikTok:\t\t\t\t${Font_Red}Failed (Network Connection)${Font_Suffix}\n"
         return
@@ -747,6 +747,7 @@ function MediaUnlockTest_TikTok() {
         return
     fi
     local STmpresult=$(curl $useNIC $usePROXY $xForward --user-agent "${UA_Browser}" -sL -m 10 -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" -H "Accept-Encoding: gzip" -H "Accept-Language: en" "https://www.tiktok.com" | gunzip 2>/dev/null)
+    [[ "$Ftmpresult" = *"Please wait..."* ]] && STmpresult=$(curl $useNIC $usePROXY $xForward --user-agent "${UA_Browser}" -sL -m 10 -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" -H "Accept-Encoding: gzip" -H "Accept-Language: en" "https://www.tiktok.com/explore" | gunzip 2>/dev/null)
     local SRegion=$(echo $STmpresult | grep '"region":' | sed 's/.*"region"//' | cut -f2 -d'"')
     if [ -n "$SRegion" ]; then
         echo -n -e "\r TikTok:\t\t${resultunlocktype}\t${Font_Yellow}IDC IP (Region: ${SRegion})${Font_Suffix}\n"
