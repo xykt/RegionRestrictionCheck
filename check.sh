@@ -386,7 +386,6 @@ function Check_DNS_2()
 function Check_DNS_3()
 {
     local resultdnstext=$(dig "test$RANDOM$RANDOM.${1}" | grep "ANSWER:")
-    echo "test$RANDOM$RANDOM.${1}"
     local resultdnstext=${resultdnstext#*"ANSWER: "}
     local resultdnstext=${resultdnstext%", AUTHORITY:"*}
     if [ "${resultdnstext}" == "0" ];then
@@ -3139,14 +3138,46 @@ function MediaUnlockTest_Instagram.Music() {
 }
 
 function RedditUnlockTest() {
-    local result=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} --user-agent "${UA_Browser}" -fsL --write-out %{http_code} --output /dev/null --max-time 10 "https://www.reddit.com/" 2>&1)
-    case "$result" in
-        "000") echo -n -e "\r Reddit:\t\t\t\t${Font_Red}Failed (Network Connection)${Font_Suffix}\n" ;;
-        "403") echo -n -e "\r Reddit:\t\t\t\t${Font_Red}No${Font_Suffix}\n" ;;
-        "200") echo -n -e "\r Reddit:\t\t\t\t${Font_Green}Yes${Font_Suffix}\n" ;;
-        *) echo -n -e "\r Reddit:\t\t\t\t${Font_Red}Failed (Unexpected Result: $result)${Font_Suffix}\n" ;;
+    local checkunlockurl="www.reddit.com"
+    local result1=`Check_DNS_1 ${checkunlockurl}`
+    local result2=`Check_DNS_2 ${checkunlockurl}`
+    local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result2}`
+    local resp http_code html region
+    local resolve_opt=""
+    if [ "$1" = "6" ]; then
+        local dual_ipv6
+        dual_ipv6=$(dig AAAA reddit.com +short | head -n 1)
+        [[ -z "$dual_ipv6" ]] && dual_ipv6=$(dig AAAA dualstack.reddit.map.fastly.net +short | head -n 1)
+        if [ -n "$dual_ipv6" ]; then
+            resolve_opt="--resolve www.reddit.com:443:[$dual_ipv6]"
+        else
+            echo -n -e "\r Reddit:\t\t\t\t${Font_Red}Failed (No IPv6 for dualstack.fastly)${Font_Suffix}\n"
+            return
+        fi
+    fi
+    resp=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} -fsL --user-agent "${UA_Browser}" --max-time 10 $resolve_opt --write-out '\n%{http_code}' "https://www.reddit.com/")
+    http_code=$(printf '%s' "$resp" | tail -n 1 | tr -d '\r')
+    html=$(printf '%s' "$resp" | sed '$d')
+    if [ "$http_code" = "200" ]; then
+        region=$(printf '%s' "$html"| tr '\n' ' ' | sed -n 's/.*country="\([^"]*\)".*/\1/p' | head -n 1)
+    fi
+    case "$http_code" in
+        000)
+            echo -n -e "\r Reddit:\t\t\t\t${Font_Red}Failed (Network Connection)${Font_Suffix}\n"
+            ;;
+        403)
+            echo -n -e "\r Reddit:\t\t\t\t${Font_Red}No${Font_Suffix}\n"
+            ;;
+        200)
+            echo -n -e "\r Reddit:\t\t${resultunlocktype}\t${Font_Green}Yes (Region: ${region:-Unknown})${Font_Suffix}\n"
+            ;;
+        *)
+            echo -n -e "\r Reddit:\t\t\t\t${Font_Red}Failed (Unexpected Result: $http_code)${Font_Suffix}\n"
+            ;;
     esac
 }
+
+
 
 function MediaUnlockTest_Popcornflix(){
     local result=$(curl $useNIC $usePROXY $xForward -${1} ${ssll} -s --user-agent "${UA_Browser}" --write-out %{http_code} --output /dev/null --max-time 10 "https://popcornflix-prod.cloud.seachange.com/cms/popcornflix/clientconfiguration/versions/2" 2>&1)
