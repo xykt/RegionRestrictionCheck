@@ -3138,7 +3138,7 @@ function MediaUnlockTest_Instagram.Music() {
 }
 
 function RedditUnlockTest() {
-    local checkunlockurl="www.reddit.com"
+    local checkunlockurl="reddit.com"
     local result1=`Check_DNS_1 ${checkunlockurl}`
     local result2=`Check_DNS_2 ${checkunlockurl}`
     local resultunlocktype=`Get_Unlock_Type ${resultP} ${result1} ${result2}`
